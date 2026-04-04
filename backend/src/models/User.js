@@ -12,9 +12,7 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING(255),
         allowNull: false,
         unique: true,
-        validate: {
-            isEmail: true
-        }
+        validate: { isEmail: true }
     },
     password: {
         type: DataTypes.STRING(255),
@@ -42,7 +40,6 @@ const User = sequelize.define('User', {
 }, {
     tableName: 'users',
     timestamps: true,
-    
     hooks: {
         beforeCreate: async (user) => {
             if (user.password) {
@@ -57,7 +54,6 @@ const User = sequelize.define('User', {
     }
 });
 
-// instanca per me kontrollu ni password
 User.prototype.comparePassword = async function(candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
 };

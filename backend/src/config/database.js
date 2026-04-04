@@ -1,16 +1,15 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-// lidhja me MySql
 const sequelize = new Sequelize(
-    process.env.DB_NAME,      // charity_db
-    process.env.DB_USER,      
-    process.env.DB_PASSWORD,  
+    process.env.DB_NAME,
+    process.env.DB_USER,
+    process.env.DB_PASSWORD,
     {
-        host: process.env.DB_HOST,  // localhost
-        port: process.env.DB_PORT,  // 3306
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
         dialect: 'mysql',
-        logging: false,  // bone true me i pa sql queries
+        logging: false,
         pool: {
             max: 5,
             min: 0,
@@ -20,19 +19,14 @@ const sequelize = new Sequelize(
     }
 );
 
-// testo per me pa lidhjen mes databazes 
 const connectDB = async () => {
     try {
         await sequelize.authenticate();
-        console.log('Lidhja me MySql sukses');
-        console.log(`Database: ${process.env.DB_NAME}`);
-        console.log(`User: ${process.env.DB_USER}`);
-        
-        // boni sync gjitha modelet (krijo tabela nese ska hiq)
+        console.log('Lidhja me MySQL sukses');
         await sequelize.sync({ alter: false });
-        console.log('Tabelat e databazes jane bere sync');
+        console.log('Databaza eshte sinkronizu');
     } catch (error) {
-        console.error('Lidhja me MySQL nuk eshte bere:', error);
+        console.error('Lidhja me MySQL deshtim:', error);
         process.exit(1);
     }
 };
