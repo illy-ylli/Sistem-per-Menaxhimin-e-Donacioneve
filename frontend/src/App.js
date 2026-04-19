@@ -6,13 +6,13 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
 
-// Import Bootstrap CSS (your friend already set this up)
+// Import Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
     return (
         <Router>
-            {/* Toast notifications */}
+            {/* Toast lajmrimet */}
             <Toaster position="top-right" />
             
             <Routes>
@@ -20,7 +20,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 
-                {/* Protected routes (require login) */}
+                {/* Protected routes (nevojitet login) */}
                 <Route 
                     path="/dashboard" 
                     element={

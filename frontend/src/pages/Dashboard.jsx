@@ -1,170 +1,130 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import authService from '../services/authService';
-import toast from 'react-hot-toast';
+import Header from '../components/Header';
 
-const Register = () => {
-    // gjendja e te dhenave te formes
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-        confirmPassword: '',
-        firstName: '',
-        lastName: '',
-        role: 'user'
-    });
-    // gjendja e ngarkimit
-    const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate(); // per ridrejtim
-    
-    // ndryshimi i inputeve
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
-    
-    // dorzimi i formes
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        // verifikimi i fushave te zbrazeta
-        if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
-            toast.error('Ju lutem plotësoni të gjitha fushat');
-            return;
-        }
-        
-        // verifikimi i fjalekalimeve
-        if (formData.password !== formData.confirmPassword) {
-            toast.error('Fjalëkalimet nuk përputhen');
-            return;
-        }
-        
-        // verifikimi i gjatesise se fjalekalimit
-        if (formData.password.length < 6) {
-            toast.error('Fjalëkalimi duhet të ketë të paktën 6 karaktere');
-            return;
-        }
-        
-        setIsLoading(true);
-        
-        try {
-            // heq konfirmimin para regjistrimit
-            const { confirmPassword, ...registerData } = formData;
-            const result = await authService.register(registerData);
-            toast.success(`Mirë se vini, ${result.user.firstName}!`);
-            navigate('/dashboard'); // shko ne dashboard
-        } catch (error) {
-            toast.error(error.message || 'Regjistrimi dështoi. Email-i mund të jetë në përdorim.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
+const Dashboard = () => {
+    const navigate = useNavigate();
+    const user = authService.getCurrentUser();
     
     return (
-        <div className="donate-area relative section-gap" style={{minHeight: '100vh'}}>
-            <div className="overlay overlay-bg"></div>
-            <div className="container">
-                <div className="row d-flex justify-content-center">
-                    <div className="col-lg-6 col-sm-12 pb-80 header-text">
-                        <h1>Regjistrohu</h1>
-                        <p style={{color: 'white'}}>
-                            Krijo një llogari të re për të filluar dhurimin dhe për të ndihmuar të tjerët.
-                        </p>
+        <>
+            {/* Header costum me SHKYQU buton */}
+            <Header />
+            
+            {/* vendosja e padding ne fillim so permbajtja e dashboard nuk mshefet perfundi header */}
+            <div style={{ paddingTop: '80px' }}>
+                {/* Mire se vini Banner */}
+                <section className="banner-area relative" id="dashboard">
+                    <div className="overlay overlay-bg"></div>
+                    <div className="container">
+                        <div className="row fullscreen align-items-center justify-content-start" style={{ height: '400px' }}>
+                            <div className="banner-content col-lg-9 col-md-12">
+                                <h1>
+                                    Mirë se vini, <br />
+                                    {user?.firstName} {user?.lastName}!
+                                </h1>
+                                <p className="text-white">
+                                    Email: {user?.email} | Roli: {user?.role === 'admin' ? 'Administrator' : user?.role === 'manager' ? 'Menaxher' : 'Përdorues'}
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div className="row d-flex justify-content-center">
-                    <div className="col-lg-8 contact-right">
-                        <form className="booking-form" onSubmit={handleSubmit}>
-                            <div className="row">
-                                <div className="col-lg-6 d-flex flex-column">
-                                    <input 
-                                        name="firstName" 
-                                        placeholder="Emri" 
-                                        onFocus={(e) => e.target.placeholder = ''} 
-                                        onBlur={(e) => e.target.placeholder = 'Emri'} 
-                                        className="form-control mt-20" 
-                                        type="text"
-                                        value={formData.firstName}
-                                        onChange={handleChange}
-                                        required 
-                                    />
+                </section>
+
+                {/* Statistikat Sektori*/}
+                <section className="callto-area relative">
+                    <div className="container">
+                        <div className="row d-flex callto-wrap justify-content-between pt-40 pb-40">
+                            <h3 className="text-white">Statistikat e Sistemit</h3>
+                            <div className="row w-100 mt-4">
+                                <div className="col-md-4 text-center">
+                                    <h2 className="text-white">0</h2>
+                                    <p className="text-white">Donacione Totale</p>
                                 </div>
-                                <div className="col-lg-6 d-flex flex-column">
-                                    <input 
-                                        name="lastName" 
-                                        placeholder="Mbiemri" 
-                                        onFocus={(e) => e.target.placeholder = ''} 
-                                        onBlur={(e) => e.target.placeholder = 'Mbiemri'} 
-                                        className="form-control mt-20" 
-                                        type="text"
-                                        value={formData.lastName}
-                                        onChange={handleChange}
-                                        required 
-                                    />
+                                <div className="col-md-4 text-center">
+                                    <h2 className="text-white">0</h2>
+                                    <p className="text-white">Fushata Aktive</p>
                                 </div>
-                                <div className="col-lg-12 d-flex flex-column">
-                                    <input 
-                                        name="email" 
-                                        placeholder="Email adresa" 
-                                        onFocus={(e) => e.target.placeholder = ''} 
-                                        onBlur={(e) => e.target.placeholder = 'Email adresa'} 
-                                        className="form-control mt-20" 
-                                        type="email"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        required 
-                                    />
-                                </div>
-                                <div className="col-lg-6 d-flex flex-column">
-                                    <input 
-                                        name="password" 
-                                        placeholder="Fjalëkalimi" 
-                                        onFocus={(e) => e.target.placeholder = ''} 
-                                        onBlur={(e) => e.target.placeholder = 'Fjalëkalimi'} 
-                                        className="form-control mt-20" 
-                                        type="password"
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                        required 
-                                    />
-                                </div>
-                                <div className="col-lg-6 d-flex flex-column">
-                                    <input 
-                                        name="confirmPassword" 
-                                        placeholder="Konfirmo fjalëkalimin" 
-                                        onFocus={(e) => e.target.placeholder = ''} 
-                                        onBlur={(e) => e.target.placeholder = 'Konfirmo fjalëkalimin'} 
-                                        className="form-control mt-20" 
-                                        type="password"
-                                        value={formData.confirmPassword}
-                                        onChange={handleChange}
-                                        required 
-                                    />
-                                </div>
-                                <div className="col-lg-12 d-flex justify-content-end send-btn">
-                                    <button 
-                                        type="submit" 
-                                        className="submit-btn primary-btn mt-20 text-uppercase"
-                                        disabled={isLoading}
-                                    >
-                                        {isLoading ? 'Duke u regjistruar...' : 'Regjistrohu'}
-                                        <span className="lnr lnr-arrow-right"></span>
-                                    </button>
-                                </div>
-                                <div className="col-lg-12 text-center mt-20">
-                                    <p className="payment-method">
-                                        Keni llogari? <Link to="/login">Hyni këtu</Link>
-                                    </p>
+                                <div className="col-md-4 text-center">
+                                    <h2 className="text-white">0</h2>
+                                    <p className="text-white">Donatorë</p>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
+                </section>
+
+                {/* Coming Soon Sektori */}
+                <section className="project-area section-gap">
+                    <div className="container">
+                        <div className="row d-flex justify-content-center">
+                            <div className="col-md-8 pb-80 header-text">
+                                <h1>Funksionalitetet në Zhvillim</h1>
+                                <p>
+                                    Menaxhimi i fushatave, donatorëve, donacioneve dhe shpenzimeve do të jenë të disponueshme në Java 2.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-lg-3 col-md-6">
+                                <div className="single-project">
+                                    <div className="content">
+                                        <div className="content-overlay"></div>
+                                        <div className="content-details fadeIn-bottom">
+                                            <h4 className="text-white">Fushata</h4>
+                                        </div>
+                                    </div>
+                                    <div className="details text-center mt-3">
+                                        <h5>Menaxhimi i Fushatave</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-3 col-md-6">
+                                <div className="single-project">
+                                    <div className="content">
+                                        <div className="content-overlay"></div>
+                                        <div className="content-details fadeIn-bottom">
+                                            <h4 className="text-white">Donatorët</h4>
+                                        </div>
+                                    </div>
+                                    <div className="details text-center mt-3">
+                                        <h5>Menaxhimi i Donatorëve</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-3 col-md-6">
+                                <div className="single-project">
+                                    <div className="content">
+                                        <div className="content-overlay"></div>
+                                        <div className="content-details fadeIn-bottom">
+                                            <h4 className="text-white">Donacionet</h4>
+                                        </div>
+                                    </div>
+                                    <div className="details text-center mt-3">
+                                        <h5>Gjurmimi i Donacioneve</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-3 col-md-6">
+                                <div className="single-project">
+                                    <div className="content">
+                                        <div className="content-overlay"></div>
+                                        <div className="content-details fadeIn-bottom">
+                                            <h4 className="text-white">Raportet</h4>
+                                        </div>
+                                    </div>
+                                    <div className="details text-center mt-3">
+                                        <h5>Raporte Financiare</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </div>
+        </>
     );
 };
 
-export default Register;
+export default Dashboard;

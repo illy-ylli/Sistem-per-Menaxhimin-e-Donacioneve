@@ -4,6 +4,7 @@ import authService from '../services/authService';
 import toast from 'react-hot-toast';
 
 const Register = () => {
+    // te dhenat e formularit
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -12,9 +13,11 @@ const Register = () => {
         lastName: '',
         role: 'user'
     });
+    // gjendja e ngarkimit
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // per navigim
     
+    // trajton ndryshimet e inputeve
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -22,19 +25,23 @@ const Register = () => {
         });
     };
     
+    // trajton dergimin e formularit
     const handleSubmit = async (e) => {
         e.preventDefault();
         
+        // verifikon fushat e zbrazeta
         if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
             toast.error('Ju lutem plotësoni të gjitha fushat');
             return;
         }
         
+        // verifikon nese fjalekalimet perputhen
         if (formData.password !== formData.confirmPassword) {
             toast.error('Fjalëkalimet nuk përputhen');
             return;
         }
         
+        // verifikon gjatesine e fjalekalimit
         if (formData.password.length < 6) {
             toast.error('Fjalëkalimi duhet të ketë të paktën 6 karaktere');
             return;
@@ -43,10 +50,11 @@ const Register = () => {
         setIsLoading(true);
         
         try {
+            // heq confirmPassword para regjistrimit
             const { confirmPassword, ...registerData } = formData;
             const result = await authService.register(registerData);
             toast.success(`Mirë se vini, ${result.user.firstName}!`);
-            navigate('/dashboard');
+            navigate('/dashboard'); // ridrejton ne dashboard
         } catch (error) {
             toast.error(error.message || 'Regjistrimi dështoi. Email-i mund të jetë në përdorim.');
         } finally {
@@ -147,7 +155,7 @@ const Register = () => {
                                 </div>
                                 <div className="col-lg-12 text-center mt-20">
                                     <p className="payment-method">
-                                        Keni llogari? <Link to="/login">Hyni këtu</Link>
+                                        Keni llogari? <Link to="/login" style={{ color: '#fb115f' }}>Hyni këtu</Link>
                                     </p>
                                 </div>
                             </div>

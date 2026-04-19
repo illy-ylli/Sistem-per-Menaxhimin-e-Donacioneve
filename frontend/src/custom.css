@@ -5,7 +5,7 @@
 /* Ndrysho ngjyren e tekstit ne inpute */
 .donate-area .contact-right input,
 .donate-area .contact-right input::placeholder {
-    color: #f50c0c !important;
+    color: #ffffff !important;
 }
 
 /* Beje placeholder-in pak te tejdukshem */

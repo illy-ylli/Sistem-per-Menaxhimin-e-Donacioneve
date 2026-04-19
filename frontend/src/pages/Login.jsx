@@ -4,51 +4,56 @@ import authService from '../services/authService';
 import toast from 'react-hot-toast';
 
 const Login = () => {
-    // State per te ruajtur te dhenat a formularit
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     });
-    
-    // State per treguesin e ngarkimit(loading)
     const [isLoading, setIsLoading] = useState(false);
-    
-    // Hook per mu navigu permes faqeve
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     
-    // Trajton ndryshimet ne inpute
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
+        // Fshije errorin kur fillon me shkru
+        if (error) setError('');
     };
     
-    // Trajton dergimin e formularit
     const handleSubmit = async (e) => {
         e.preventDefault();
         
         // Validimi
         if (!formData.email || !formData.password) {
+            setError('Ju lutem plotësoni të gjitha fushat');
             toast.error('Ju lutem plotësoni të gjitha fushat');
             return;
         }
         
         setIsLoading(true);
+        setError('');
         
         try {
-            // Thirr API per identifikim
             const result = await authService.login(formData);
-            
-            // Shfaq mesazh suksesi
             toast.success(`Mirë se vini, ${result.user.firstName}!`);
-            
-            // Ridrejto ne dashboard
             navigate('/dashboard');
-            
         } catch (error) {
-            // Shfaq mesazh gabimi
-            toast.error(error.message || 'Login dështoi. Kontrolloni email dhe fjalëkalimin.');
+            // Trajtimi i errorave te ndryshem
+            let errorMessage = 'Login dështoi. Provoni përsëri.';
+            
+            if (error.message === 'Invalid credentials') {
+                errorMessage = 'Email ose fjalëkalim i gabuar. Ju lutem provoni përsëri.';
+            } else if (error.message === 'Account is deactivated') {
+                errorMessage = 'Llogaria juaj është e çaktivizuar. Kontaktoni administratorin.';
+            } else if (error.message === 'User not found') {
+                errorMessage = 'Ky email nuk ekziston. Ju lutem regjistrohuni.';
+            } else if (error.errors) {
+                errorMessage = error.errors[0]?.msg || errorMessage;
+            }
+            
+            setError(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setIsLoading(false);
         }
@@ -60,14 +65,44 @@ const Login = () => {
             <div className="container">
                 <div className="row d-flex justify-content-center">
                     <div className="col-lg-6 col-sm-12 pb-80 header-text">
-                        <h1 style={{color: 'white'}}>Hyni në Llogari</h1>
-                        <p style={{color: 'white'}}>
+                        <h1 style={{ color: 'white' }}>Hyni në Llogari</h1>
+                        <p style={{ color: 'white' }}>
                             Kyçu për të menaxhuar donacionet tuaja dhe për të ndjekur fushatat bamirëse.
                         </p>
                     </div>
                 </div>
                 <div className="row d-flex justify-content-center">
                     <div className="col-lg-6 contact-right">
+                        
+                        {/* Error Popup - shfaqet kur login  deshton */}
+                        {error && (
+                            <div className="alert alert-danger alert-dismissible fade show" role="alert" style={{
+                                backgroundColor: '#f8d7da',
+                                border: '1px solid #f5c6cb',
+                                borderRadius: '10px',
+                                padding: '15px',
+                                marginBottom: '20px',
+                                color: '#721c24'
+                            }}>
+                                <strong>Gabim!</strong> {error}
+                                <button 
+                                    type="button" 
+                                    className="close" 
+                                    onClick={() => setError('')}
+                                    style={{
+                                        float: 'right',
+                                        background: 'none',
+                                        border: 'none',
+                                        fontSize: '20px',
+                                        cursor: 'pointer',
+                                        color: '#721c24'
+                                    }}
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        )}
+                        
                         <form className="booking-form" onSubmit={handleSubmit}>
                             <div className="row">
                                 <div className="col-lg-12 d-flex flex-column">
@@ -101,14 +136,18 @@ const Login = () => {
                                         type="submit" 
                                         className="submit-btn primary-btn mt-20 text-uppercase"
                                         disabled={isLoading}
+                                        style={{
+                                            opacity: isLoading ? '0.7' : '1',
+                                            cursor: isLoading ? 'not-allowed' : 'pointer'
+                                        }}
                                     >
                                         {isLoading ? 'Duke u kyçur...' : 'Kyçu'}
                                         <span className="lnr lnr-arrow-right"></span>
                                     </button>
                                 </div>
                                 <div className="col-lg-12 text-center mt-20">
-                                    <p className="payment-method">
-                                        Nuk keni llogari? <Link to="/register" >Regjistrohu këtu</Link>
+                                    <p className="payment-method" style={{ color: 'white' }}>
+                                        Nuk keni llogari? <Link to="/register" style={{ color: '#fb115f' }}>Regjistrohu këtu</Link>
                                     </p>
                                 </div>
                             </div>

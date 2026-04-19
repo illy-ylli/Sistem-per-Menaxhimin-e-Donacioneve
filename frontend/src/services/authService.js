@@ -38,34 +38,32 @@ const authService = {
 
     // IDENTIFIKIMI - Autentikon përdoruesin ekzistues
     login: async (credentials) => {
-        try {
-            const response = await api.post('/auth/login', credentials);
+    try {
+        const response = await api.post('/auth/login', credentials);
+        
+        if (response.data.accessToken) {
+            Cookies.set('accessToken', response.data.accessToken, {
+                secure: true,
+                sameSite: 'strict',
+                expires: 1/96
+            });
             
-            // nese identifikimi eshte  i suksesshem ruaj token-at ne cookies
-            if (response.data.accessToken) {
-                // Ruaj access token (skadon pas 15 minutash)
-                Cookies.set('accessToken', response.data.accessToken, {
-                    secure: true,
-                    sameSite: 'strict',
-                    expires: 1/96  // 15 minuta
-                });
-                
-                // Ruaj refresh token (skadon pas 7 ditesh)
-                Cookies.set('refreshToken', response.data.refreshToken, {
-                    secure: true,
-                    sameSite: 'strict',
-                    expires: 7  // 7 ditë
-                });
-                
-                // Ruaj informacionin e perdoruesit ne sessionStorage
-                sessionStorage.setItem('user', JSON.stringify(response.data.user));
-            }
+            Cookies.set('refreshToken', response.data.refreshToken, {
+                secure: true,
+                sameSite: 'strict',
+                expires: 7
+            });
             
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
+            sessionStorage.setItem('user', JSON.stringify(response.data.user));
         }
-    },
+        
+        return response.data;
+    } catch (error) {
+        // nxerre mesazhin e errorit nga backendi
+        const errorMessage = error.response?.data?.message || error.message;
+        throw new Error(errorMessage);
+    }
+},
     
     // DALJA - Përfundon sesionin e përdoruesit
     logout: async () => {
