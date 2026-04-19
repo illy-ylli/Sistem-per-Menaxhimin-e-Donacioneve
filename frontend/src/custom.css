@@ -1,0 +1,235 @@
+/* --------------------------------------------
+   1. NGJYRAT E TEKSTIT PER LOGIN DHE REGJISTRIM
+   -------------------------------------------- */
+
+/* Ndrysho ngjyren e tekstit ne inpute */
+.donate-area .contact-right input,
+.donate-area .contact-right input::placeholder {
+    color: #f50c0c !important;
+}
+
+/* Beje placeholder-in pak te tejdukshem */
+.donate-area .contact-right input::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Ndrysho ngjyren e etiketave */
+.donate-area .contact-right label {
+    color: #1108c0 !important;
+}
+
+/* --------------------------------------------
+   2. STILET E BUTONAVE
+   -------------------------------------------- */
+
+/* Ndrysho ngjyrat e butonave Login/Register */
+.primary-btn {
+    background: linear-gradient(0deg, #f40f68 0%, #f86e3d 55%, #fbcd11 100%);
+    border: none;
+    color: white;
+}
+
+/* Efekti kur rri mbi buton */
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Stili i personalizuar per butonin e shkycjes */
+.logout-btn {
+    background: linear-gradient(0deg, #dc3545 0%, #ff6b6b 100%);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220,53,69,0.3);
+}
+
+/* --------------------------------------------
+   3. STILET E PERSONALIZUARA PER DASHBOARD
+   -------------------------------------------- */
+
+/* Header i dashboard - zhvendos butonin e shkycjes ne te djathte */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+
+/* Kartat e statistikave */
+.stats-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+}
+
+.stats-card h2 {
+    color: white;
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.stats-card p {
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 0;
+}
+
+/* Kartat e dashboard */
+.dashboard-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.dashboard-card h3 {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.dashboard-card h5 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* --------------------------------------------
+   4. KLASAT E PERSONALIZUARA PER NGJYRAT E TEKSTIT
+   -------------------------------------------- */
+
+.text-custom-pink { color: #f40f68; }
+.text-custom-orange { color: #f86e3d; }
+.text-custom-yellow { color: #fbcd11; }
+.text-custom-white { color: #ffffff; }
+.text-custom-dark { color: #222222; }
+
+/* --------------------------------------------
+   5. GRADIENTET E SFONDIT
+   -------------------------------------------- */
+
+.bg-gradient-primary {
+    background: linear-gradient(0deg, #f40f68 0%, #f86e3d 55%, #fbcd11 100%);
+}
+
+.bg-gradient-danger {
+    background: linear-gradient(0deg, #dc3545 0%, #ff6b6b 100%);
+}
+
+.bg-gradient-success {
+    background: linear-gradient(0deg, #28a745 0%, #20c997 100%);
+}
+
+.bg-gradient-info {
+    background: linear-gradient(0deg, #17a2b8 0%, #4cd3e3 100%);
+}
+
+/* --------------------------------------------
+   6. BUTONI I SHKYCJES NE NAVBAR
+   -------------------------------------------- */
+
+/* Stili per linkun e shkycjes ne navigacion */
+nav a.logout-link {
+    background: linear-gradient(0deg, #dc3545 0%, #ff6b6b 100%);
+    padding: 8px 20px;
+    border-radius: 25px;
+    color: white !important;
+    margin-left: 15px;
+}
+
+nav a.logout-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220,53,69,0.3);
+    color: white !important;
+}
+
+/* --------------------------------------------
+   7. RREGULLIME PER PAJISJET MOBILE
+   -------------------------------------------- */
+
+@media (max-width: 768px) {
+    .stats-card {
+        margin-bottom: 15px;
+    }
+    
+    .dashboard-card {
+        margin-bottom: 15px;
+    }
+    
+    nav a.logout-link {
+        display: inline-block;
+        margin: 5px 25px;
+    }
+}
+
+/* --------------------------------------------
+   8. EFEKTET KUR RRI MBI KARTE
+   -------------------------------------------- */
+
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* --------------------------------------------
+   9. STILET E PERSONALIZUARA PER FORMULARET
+   -------------------------------------------- */
+
+.custom-input {
+    background: rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    color: white !important;
+    border-radius: 30px !important;
+    padding: 12px 20px !important;
+}
+
+.custom-input:focus {
+    border-color: #f86e3d !important;
+    box-shadow: 0 0 10px rgba(248,110,61,0.3) !important;
+}
+
+/* --------------------------------------------
+   10. ANIMACIONET
+   -------------------------------------------- */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeInUp {
+    animation: fadeInUp 0.5s ease forwards;
+}
