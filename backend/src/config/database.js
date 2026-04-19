@@ -10,23 +10,18 @@ const sequelize = new Sequelize(
         port: process.env.DB_PORT,
         dialect: 'mysql',
         logging: false,
-        pool: {
-            max: 5,
-            min: 0,
-            acquire: 30000,
-            idle: 10000
-        }
+        pool: { max: 5, min: 0, acquire: 30000, idle: 10000 }
     }
 );
 
 const connectDB = async () => {
     try {
         await sequelize.authenticate();
-        console.log('Lidhja me MySQL sukses');
+        console.log('✅ MySQL connected successfully!');
         await sequelize.sync({ alter: false });
-        console.log('Databaza eshte sinkronizu');
+        console.log('✅ Database synced');
     } catch (error) {
-        console.error('Lidhja me MySQL deshtim:', error);
+        console.error('❌ MySQL connection failed:', error);
         process.exit(1);
     }
 };

@@ -5,6 +5,9 @@ const morgan = require('morgan');
 const compression = require('compression');
 const dotenv = require('dotenv');
 const path = require('path');  // <-- moved here
+const categoryRoutes = require('./routes/categoryRoutes');
+const expenseRoutes = require('./routes/expenseRoutes');
+const volunteerRoutes = require('./routes/volunteerRoutes');
 
 dotenv.config();
 
@@ -30,6 +33,9 @@ app.use(express.static(path.join(__dirname, '../../'))); // ✅ points to projec
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/expenses', expenseRoutes);
+app.use('/api/volunteers', volunteerRoutes);
 
 app.get('/health', (req, res) => {
     res.json({ status: 'OK', message: 'Server is running with Node.js!', database: 'MySQL' });
