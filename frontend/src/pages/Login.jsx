@@ -26,7 +26,7 @@ const Login = () => {
     
     // Trajton dergimin e formularit
     const handleSubmit = async (e) => {
-        e.preventDefault();  // Parandalon rifreskimin e faqes
+        e.preventDefault();
         
         // Validimi
         if (!formData.email || !formData.password) {
@@ -55,62 +55,64 @@ const Login = () => {
     };
     
     return (
-        <div className="container mt-5">
-            <div className="row justify-content-center">
-                <div className="col-md-6 col-lg-5">
-                    <div className="card shadow">
-                        <div className="card-body p-5">
-                            <h2 className="text-center mb-4">Sistem për Menaxhim të Donacioneve</h2>
-                            <h4 className="text-center text-muted mb-4">Hyni në llogari</h4>
-                            
-                            <form onSubmit={handleSubmit}>
-                                {/* Fusha Email */}
-                                <div className="mb-3">
-                                    <label className="form-label">Email</label>
-                                    <input
+        <div className="donate-area relative section-gap" style={{minHeight: '100vh'}}>
+            <div className="overlay overlay-bg"></div>
+            <div className="container">
+                <div className="row d-flex justify-content-center">
+                    <div className="col-lg-6 col-sm-12 pb-80 header-text">
+                        <h1 style={{color: 'white'}}>Hyni në Llogari</h1>
+                        <p style={{color: 'white'}}>
+                            Kyçu për të menaxhuar donacionet tuaja dhe për të ndjekur fushatat bamirëse.
+                        </p>
+                    </div>
+                </div>
+                <div className="row d-flex justify-content-center">
+                    <div className="col-lg-6 contact-right">
+                        <form className="booking-form" onSubmit={handleSubmit}>
+                            <div className="row">
+                                <div className="col-lg-12 d-flex flex-column">
+                                    <input 
+                                        name="email" 
+                                        placeholder="Email adresa" 
+                                        onFocus={(e) => e.target.placeholder = ''} 
+                                        onBlur={(e) => e.target.placeholder = 'Email adresa'} 
+                                        className="form-control mt-20" 
                                         type="email"
-                                        name="email"
-                                        className="form-control"
-                                        placeholder="example@email.com"
                                         value={formData.email}
                                         onChange={handleChange}
-                                        disabled={isLoading}
-                                        required
+                                        required 
                                     />
                                 </div>
-                                
-                                {/* Fusha Fjalkalim */}
-                                <div className="mb-3">
-                                    <label className="form-label">Fjalëkalim</label>
-                                    <input
+                                <div className="col-lg-12 d-flex flex-column">
+                                    <input 
+                                        name="password" 
+                                        placeholder="Fjalëkalimi" 
+                                        onFocus={(e) => e.target.placeholder = ''} 
+                                        onBlur={(e) => e.target.placeholder = 'Fjalëkalimi'} 
+                                        className="form-control mt-20" 
                                         type="password"
-                                        name="password"
-                                        className="form-control"
-                                        placeholder="••••••"
                                         value={formData.password}
                                         onChange={handleChange}
-                                        disabled={isLoading}
-                                        required
+                                        required 
                                     />
                                 </div>
-                                
-                                {/* Butoni i Dergimit */}
-                                <button 
-                                    type="submit" 
-                                    className="btn btn-primary w-100 py-2"
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? 'Duke u kyçur...' : 'Kyçu'}
-                                </button>
-                                
-                                {/* Lidhja per Regjistrim */}
-                                <div className="text-center mt-3">
-                                    <Link to="/register" className="text-decoration-none">
-                                        Nuk keni llogari? Regjistrohu
-                                    </Link>
+                                <div className="col-lg-12 d-flex justify-content-end send-btn">
+                                    <button 
+                                        type="submit" 
+                                        className="submit-btn primary-btn mt-20 text-uppercase"
+                                        disabled={isLoading}
+                                    >
+                                        {isLoading ? 'Duke u kyçur...' : 'Kyçu'}
+                                        <span className="lnr lnr-arrow-right"></span>
+                                    </button>
                                 </div>
-                            </form>
-                        </div>
+                                <div className="col-lg-12 text-center mt-20">
+                                    <p className="payment-method">
+                                        Nuk keni llogari? <Link to="/register" >Regjistrohu këtu</Link>
+                                    </p>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

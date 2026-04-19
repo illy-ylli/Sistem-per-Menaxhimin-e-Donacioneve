@@ -4,6 +4,7 @@ import authService from '../services/authService';
 import toast from 'react-hot-toast';
 
 const Register = () => {
+    // gjendja e te dhenave te formes
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -12,9 +13,11 @@ const Register = () => {
         lastName: '',
         role: 'user'
     });
+    // gjendja e ngarkimit
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // per ridrejtim
     
+    // ndryshimi i inputeve
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -22,19 +25,23 @@ const Register = () => {
         });
     };
     
+    // dorzimi i formes
     const handleSubmit = async (e) => {
         e.preventDefault();
         
+        // verifikimi i fushave te zbrazeta
         if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
             toast.error('Ju lutem plotësoni të gjitha fushat');
             return;
         }
         
+        // verifikimi i fjalekalimeve
         if (formData.password !== formData.confirmPassword) {
             toast.error('Fjalëkalimet nuk përputhen');
             return;
         }
         
+        // verifikimi i gjatesise se fjalekalimit
         if (formData.password.length < 6) {
             toast.error('Fjalëkalimi duhet të ketë të paktën 6 karaktere');
             return;
@@ -43,10 +50,11 @@ const Register = () => {
         setIsLoading(true);
         
         try {
+            // heq konfirmimin para regjistrimit
             const { confirmPassword, ...registerData } = formData;
             const result = await authService.register(registerData);
             toast.success(`Mirë se vini, ${result.user.firstName}!`);
-            navigate('/dashboard');
+            navigate('/dashboard'); // shko ne dashboard
         } catch (error) {
             toast.error(error.message || 'Regjistrimi dështoi. Email-i mund të jetë në përdorim.');
         } finally {
