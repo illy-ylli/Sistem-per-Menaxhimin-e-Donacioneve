@@ -5,6 +5,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
+import CampaignCategories from './pages/CampaignCategories';
+import Donations from './pages/Donations';
 
 // Import Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -29,6 +31,22 @@ function App() {
                         </PrivateRoute>
                     } 
                 />
+                <Route 
+    path="/campaign-categories" 
+    element={
+        <PrivateRoute>
+            <CampaignCategories />
+        </PrivateRoute>
+    } 
+/>
+<Route 
+    path="/donations" 
+    element={
+        <PrivateRoute>
+            <Donations />
+        </PrivateRoute>
+    } 
+/>
                 
                 {/* Default redirect */}
                 <Route path="/" element={<Navigate to="/dashboard" />} />
