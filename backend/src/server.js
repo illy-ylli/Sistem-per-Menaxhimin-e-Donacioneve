@@ -6,6 +6,14 @@ const compression = require('compression');
 const dotenv = require('dotenv');
 const path = require('path');
 
+const categoryRoutes = require('./routes/categoryRoutes');
+const expenseRoutes = require('./routes/expenseRoutes');
+const volunteerRoutes = require('./routes/volunteerRoutes');
+const campaignRoutes = require('./routes/campaignRoutes');  // ✅ ADD THIS IMPORT
+const donorRoutes = require('./routes/donorRoutes');
+
+
+
 dotenv.config();
 
 // ============================================
@@ -82,20 +90,24 @@ app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/volunteers', volunteerRoutes);
+
 app.use('/api/campaign-categories', campaignCategoryRoutes);
 app.use('/api/donations', donationRoutes);
 
-// ============================================
-// 9. HEALTH CHECK
-// ============================================
+
+
+app.use('/api/campaigns', campaignRoutes);  // ✅ ADD THIS LINE HERE (before health and 404)
+app.use('/api/donors', donorRoutes);
+
+
+app.use('/api/campaign-categories', campaignCategoryRoutes);
+app.use('/api/donations', donationRoutes);
+
 app.get('/health', (req, res) => {
     res.json({ status: 'OK', message: 'Server is running with Node.js!', database: 'MySQL' });
 });
 
-// ============================================
-// 10. ERROR HANDLERS
-// ============================================
-// Catch-all for undefined routes (must come after static and API routes)
+
 app.use((req, res) => {
     res.status(404).json({ message: 'Route not found' });
 });
@@ -115,6 +127,6 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`🚀 Node.js Server running on port ${PORT}`);
-    console.log(`📝 Environment: ${process.env.NODE_ENV}`);
+    console.log(`📝 Environment: process.env.NODE_ENV}`);
     console.log(`🗄️  Database: MySQL`);
 });
