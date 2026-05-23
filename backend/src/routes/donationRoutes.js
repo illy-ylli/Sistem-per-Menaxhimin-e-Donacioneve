@@ -10,7 +10,31 @@ const {
     getDonationsByCampaign,
     getDonationsByDonor
 } = require('../controllers/donationController');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
+// POST /api/create-payment-intent
+router.post('/create-payment-intent', async (req, res) => {
+  try {
+    const { amount, campaign_id, donor_name, donor_email } = req.body;
+    
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(amount * 100), // Stripe përdor cent (50€ = 5000 cent)
+      currency: 'eur',
+      metadata: {
+        campaign_id: campaign_id,
+        donor_name: donor_name,
+        donor_email: donor_email
+      },
+      receipt_email: donor_email // Stripe mund të dërgojë faturë automatikisht
+    });
+    
+    res.json({
+      clientSecret: paymentIntent.client_secret
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 // ============================================
 // ROUTES PER DONACIONET
 // ============================================
