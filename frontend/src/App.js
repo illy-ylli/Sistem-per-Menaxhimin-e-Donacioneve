@@ -4,52 +4,58 @@ import { Toaster } from 'react-hot-toast';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import PrivateRoute from './components/PrivateRoute';
 import CampaignCategories from './pages/CampaignCategories';
 import Donations from './pages/Donations';
-
-// Import Bootstrap CSS
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Donors from './pages/Donors';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
     return (
         <Router>
-            {/* Toast lajmrimet */}
-            <Toaster position="top-right" />
+            <Toaster 
+                position="top-right"
+                toastOptions={{
+                    duration: 4000,
+                    style: {
+                        background: '#363636',
+                        color: '#fff',
+                    },
+                }}
+            />
             
             <Routes>
-                {/* Public routes */}
+                {/* Public routes - accessible without login */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 
-                {/* Protected routes (nevojitet login) */}
-                <Route 
-                    path="/dashboard" 
-                    element={
-                        <PrivateRoute>
-                            <Dashboard />
-                        </PrivateRoute>
-                    } 
-                />
-                <Route 
-    path="/campaign-categories" 
-    element={
-        <PrivateRoute>
-            <CampaignCategories />
-        </PrivateRoute>
-    } 
-/>
-<Route 
-    path="/donations" 
-    element={
-        <PrivateRoute>
-            <Donations />
-        </PrivateRoute>
-    } 
-/>
+                {/* Protected routes - need login */}
+                <Route path="/dashboard" element={
+                    <PrivateRoute>
+                        <Dashboard />
+                    </PrivateRoute>
+                } />
                 
-                {/* Default redirect */}
-                <Route path="/" element={<Navigate to="/dashboard" />} />
+                <Route path="/campaign-categories" element={
+                    <PrivateRoute>
+                        <CampaignCategories />
+                    </PrivateRoute>
+                } />
+                
+                <Route path="/donations" element={
+                    <PrivateRoute>
+                        <Donations />
+                    </PrivateRoute>
+                } />
+                
+                <Route path="/donors" element={
+                    <PrivateRoute>
+                        <Donors />
+                    </PrivateRoute>
+                } />
+                
+                {/* IMPORTANT: Default route goes to login, not dashboard */}
+                <Route path="/" element={<Navigate to="/login" replace />} />
+                <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>
         </Router>
     );

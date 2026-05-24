@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
+// MODEL I PËRKOHSHËM - DO TË ZËVENDËSOHET ME VERSIONIN E PLOTË MË VONË
 const Donor = sequelize.define('Donor', {
     id: {
         type: DataTypes.INTEGER,
@@ -8,26 +9,19 @@ const Donor = sequelize.define('Donor', {
         autoIncrement: true
     },
     emri: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        defaultValue: 'Temp'
     },
     mbiemri: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        defaultValue: 'Donor'
     },
     email: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: false,
-        unique: true,
-        validate: { isEmail: true }
-    },
-    telefoni: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    adresa: {
-        type: DataTypes.STRING,
-        allowNull: true
+        defaultValue: 'temp@donor.com'
     }
 }, {
     tableName: 'donors',
