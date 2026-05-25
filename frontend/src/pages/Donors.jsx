@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import toast from 'react-hot-toast';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const Donors = () => {
     const [donors, setDonors] = useState([]);
@@ -12,37 +14,48 @@ const Donors = () => {
         mbiemri: '',
         email: '',
         telefoni: '',
-        total_dhuruar: 0,
-        donation_count: 0
+        adresa: ''
     });
-    
+
+    // Get token from cookie
+    const token = Cookies.get('accessToken');
+    const api = axios.create({
+        baseURL: 'http://localhost:5000/api',
+        headers: { Authorization: `Bearer ${token}` }
+    });
+
     useEffect(() => {
         loadDonors();
     }, []);
-    
+
     const loadDonors = async () => {
         setIsLoading(true);
         try {
-            // TODO: Lidheni me backend-in kur ta krijoni
-            // Për momentin përdorim të dhëna shembull
-            setDonors([
-                { id: 1, emri: 'John', mbiemri: 'Doe', email: 'john@example.com', total_dhuruar: 500, donation_count: 3 },
-                { id: 2, emri: 'Jane', mbiemri: 'Smith', email: 'jane@example.com', total_dhuruar: 1200, donation_count: 5 },
-            ]);
+            const response = await api.get('/donors');
+            // Backend returns { success: true, data: [...] }
+            const donorsData = response.data.data;
+            // Map to include dummy total_dhuruar and donation_count (if not present)
+            const enriched = donorsData.map(d => ({
+                ...d,
+                total_dhuruar: d.total_dhuruar || 0,
+                donation_count: d.donation_count || 0
+            }));
+            setDonors(enriched);
         } catch (error) {
+            console.error(error);
             toast.error('Gabim gjatë ngarkimit të donatorëve');
         } finally {
             setIsLoading(false);
         }
     };
-    
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
     };
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         
@@ -53,27 +66,48 @@ const Donors = () => {
         
         try {
             if (editingId) {
-                // TODO: Përditëso donatorin
+                // Update donor
+                await api.put(`/donors/${editingId}`, {
+                    emri: formData.emri,
+                    mbiemri: formData.mbiemri,
+                    email: formData.email,
+                    telefoni: formData.telefoni,
+                    adresa: formData.adresa
+                });
                 toast.success('Donatori u përditësua me sukses');
             } else {
-                // TODO: Krijo donator të ri
+                // Create donor
+                await api.post('/donors', {
+                    emri: formData.emri,
+                    mbiemri: formData.mbiemri,
+                    email: formData.email,
+                    telefoni: formData.telefoni,
+                    adresa: formData.adresa
+                });
                 toast.success('Donatori u krijua me sukses');
             }
             
+            // Reset form and reload list
             setFormData({
-                emri: '', mbiemri: '', email: '', telefoni: '',
-                total_dhuruar: 0, donation_count: 0
+                emri: '', mbiemri: '', email: '', telefoni: '', adresa: ''
             });
             setEditingId(null);
             setShowForm(false);
             loadDonors();
         } catch (error) {
-            toast.error(error.message || 'Gabim gjatë ruajtjes');
+            console.error(error);
+            toast.error(error.response?.data?.message || 'Gabim gjatë ruajtjes');
         }
     };
     
     const handleEdit = (donor) => {
-        setFormData(donor);
+        setFormData({
+            emri: donor.emri,
+            mbiemri: donor.mbiemri,
+            email: donor.email,
+            telefoni: donor.telefoni || '',
+            adresa: donor.adresa || ''
+        });
         setEditingId(donor.id);
         setShowForm(true);
     };
@@ -81,11 +115,12 @@ const Donors = () => {
     const handleDelete = async (id, emri) => {
         if (window.confirm(`A jeni i sigurt që doni të fshini donatorin "${emri}"?`)) {
             try {
-                // TODO: Fshij donatorin
+                await api.delete(`/donors/${id}`);
                 toast.success('Donatori u fshi me sukses');
                 loadDonors();
             } catch (error) {
-                toast.error(error.message || 'Gabim gjatë fshirjes');
+                console.error(error);
+                toast.error(error.response?.data?.message || 'Gabim gjatë fshirjes');
             }
         }
     };
@@ -101,8 +136,7 @@ const Donors = () => {
                             className="btn btn-primary"
                             onClick={() => {
                                 setFormData({
-                                    emri: '', mbiemri: '', email: '', telefoni: '',
-                                    total_dhuruar: 0, donation_count: 0
+                                    emri: '', mbiemri: '', email: '', telefoni: '', adresa: ''
                                 });
                                 setEditingId(null);
                                 setShowForm(!showForm);
@@ -163,6 +197,16 @@ const Donors = () => {
                                                 onChange={handleChange}
                                             />
                                         </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Adresa</label>
+                                            <input
+                                                type="text"
+                                                name="adresa"
+                                                className="form-control"
+                                                value={formData.adresa}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
                                         <div className="col-12">
                                             <button type="submit" className="btn btn-success">
                                                 {editingId ? 'Përditëso' : 'Krijo'}
@@ -194,8 +238,7 @@ const Donors = () => {
                                         <th>Mbiemri</th>
                                         <th>Email</th>
                                         <th>Telefoni</th>
-                                        <th>Total i Dhuruar</th>
-                                        <th>Nr. Donacioneve</th>
+                                        <th>Adresa</th>
                                         <th>Veprimet</th>
                                     </tr>
                                 </thead>
@@ -207,8 +250,7 @@ const Donors = () => {
                                             <td>{donor.mbiemri}</td>
                                             <td>{donor.email}</td>
                                             <td>{donor.telefoni || '-'}</td>
-                                            <td>€{parseFloat(donor.total_dhuruar || 0).toFixed(2)}</td>
-                                            <td>{donor.donation_count || 0}</td>
+                                            <td>{donor.adresa || '-'}</td>
                                             <td>
                                                 <button 
                                                     className="btn btn-sm btn-warning me-2"

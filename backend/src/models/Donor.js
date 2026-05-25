@@ -22,6 +22,12 @@ const Donor = sequelize.define('Donor', {
         type: DataTypes.STRING(255),
         allowNull: false,
         defaultValue: 'temp@donor.com'
+    },
+    telefoni: { type: DataTypes.STRING,
+         allowNull: true 
+        },
+    adresa: { type: DataTypes.STRING, 
+        allowNull: true 
     }
 }, {
     tableName: 'donors',

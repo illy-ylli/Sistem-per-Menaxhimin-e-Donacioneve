@@ -17,6 +17,7 @@ const CampaignCategory = require('./models/CampaignCategory');
 const Donation = require('./models/Donation');
 const Expense = require('./models/Expense');
 const Volunteer = require('./models/Volunteer');
+const donorRoutes = require('./routes/donorRoutes');
 
 // ============================================
 // 2. VENOS MARREDHENIET (ASSOCIATIONS)
@@ -77,6 +78,7 @@ app.use('/api/volunteers', volunteerRoutes);
 app.use('/api/campaign-categories', campaignCategoryRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/payments', paymentRoutes);  // <- Tani është PAS express.json()
+app.use('/api/donors', donorRoutes);
 
 // ============================================
 // 9. HEALTH CHECK

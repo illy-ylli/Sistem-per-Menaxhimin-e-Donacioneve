@@ -1,17 +1,21 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import AdminRoute from './components/AdminRoute';
+import AuthRoute from './components/AuthRoute';
+import PrivateRoute from './components/PrivateRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import CampaignCategories from './pages/CampaignCategories';
-import Donations from './pages/Donations';
+import Campaigns from './pages/Campaigns';
 import Donors from './pages/Donors';
-import PrivateRoute from './components/PrivateRoute';
+import Donations from './pages/Donations';
+import CampaignCategories from './pages/CampaignCategories';
+import UserCampaigns from './pages/UserCampaigns';
+import UserDonors from './pages/UserDonors';   // NEW import
 
 function App() {
     return (
-        <Router>
+        <BrowserRouter>
             <Toaster 
                 position="top-right"
                 toastOptions={{
@@ -24,40 +28,39 @@ function App() {
             />
             
             <Routes>
-                {/* Public routes - accessible without login */}
+                {/* Public routes */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 
                 {/* Protected routes - need login */}
                 <Route path="/dashboard" element={
-                    <PrivateRoute>
-                        <Dashboard />
-                    </PrivateRoute>
+                    <PrivateRoute><Dashboard /></PrivateRoute>
                 } />
                 
-                <Route path="/campaign-categories" element={
-                    <PrivateRoute>
-                        <CampaignCategories />
-                    </PrivateRoute>
-                } />
-                
+                {/* User routes (accessible to any logged-in user) */}
+                <Route path="/campaigns" element={<AuthRoute><Campaigns /></AuthRoute>} />
+                {/* REMOVE the old /donors user route – we'll replace with role‑based */}
                 <Route path="/donations" element={
-                    <PrivateRoute>
-                        <Donations />
-                    </PrivateRoute>
+                    <PrivateRoute><Donations /></PrivateRoute>
                 } />
                 
-                <Route path="/donors" element={
-                    <PrivateRoute>
-                        <Donors />
-                    </PrivateRoute>
-                } />
+                {/* Public user‑facing placeholders (regular users) */}
+                <Route path="/user-campaigns" element={<UserCampaigns />} />
+                <Route path="/user-donors" element={<UserDonors />} />   {/* NEW placeholder route */}
                 
-                {/* IMPORTANT: Default route goes to login, not dashboard */}
+                {/* Admin‑only routes */}
+                <Route path="/admin/campaign-categories" element={
+                    <AdminRoute><CampaignCategories /></AdminRoute>
+                } />
+                <Route path="/admin/donors" element={
+                    <AdminRoute><Donors /></AdminRoute>
+                } />   {/* Admin full CRUD */}
+                
+                {/* Default route */}
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>
-        </Router>
+        </BrowserRouter>
     );
 }
 

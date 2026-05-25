@@ -1,214 +1,122 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import authService from '../services/authService';
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
 import toast from 'react-hot-toast';
 
 const Header = () => {
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [userRole, setUserRole] = useState(null);
     const [imgError, setImgError] = useState(false);
-    const user = authService.getCurrentUser();
-    
-    const handleLogout = async () => {
-        await authService.logout();
+
+    useEffect(() => {
+        const token = Cookies.get('accessToken');
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                setUserRole(decoded.role);
+            } catch (err) {
+                console.error('Invalid token');
+            }
+        }
+    }, []);
+
+    const handleLogout = () => {
+        Cookies.remove('accessToken');
+        Cookies.remove('refreshToken');
         toast.success('Jeni shkyçur me sukses');
         navigate('/login');
     };
-    
+
     const handleNavigation = (path) => {
         navigate(path);
+        setIsMenuOpen(false);
     };
-    
+
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
-    
+
+    const isAdmin = userRole === 'admin' || userRole === 'manager';
+    const fushataPath = isAdmin ? '/admin/campaign-categories' : '/user-campaigns';
+    const donorsPath = isAdmin ? '/admin/donors' : '/user-donors';   // NEW
+
+    const logoSrc = '/img/logo.png';
+
     return (
-        <header style={{
-            backgroundColor: 'white',
-            padding: '15px 0',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 1000
+        <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '1rem 2rem',
+            backgroundColor: '#fff',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+            flexWrap: 'wrap'
         }}>
-            <div className="container">
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    flexWrap: 'wrap'
-                }}>
-                    {/* Logo */}
-                    <div className="logo">
-                        <div onClick={() => handleNavigation('/dashboard')} style={{ cursor: 'pointer' }}>
-                            {!imgError ? (
-                                <img 
-                                    src="/img/logo.png" 
-                                    alt="Logo" 
-                                    style={{ height: '30px' }}
-                                    onError={() => setImgError(true)}
-                                />
-                            ) : (
-                                <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#f41665' }}>
-                                    Charity
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                    
-                    {/* Desktop Navigation */}
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '25px'
-                    }}>
-                        <nav style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '25px'
-                        }}>
-                            <span 
-                                onClick={() => handleNavigation('/dashboard')}
-                                style={{ 
-                                    color: '#333', 
-                                    textDecoration: 'none',
-                                    fontWeight: '500',
-                                    cursor: 'pointer'
-                                }}
-                            >DASHBOARD</span>
-                            
-                            <span 
-                                onClick={() => handleNavigation('/campaign-categories')}
-                                style={{ 
-                                    color: '#333', 
-                                    textDecoration: 'none',
-                                    fontWeight: '500',
-                                    cursor: 'pointer'
-                                }}
-                            >FUSHATA</span>
-                            
-                            <span 
-                                onClick={() => handleNavigation('/donors')}
-                                style={{ 
-                                    color: '#333', 
-                                    textDecoration: 'none',
-                                    fontWeight: '500',
-                                    cursor: 'pointer'
-                                }}
-                            >DONATORË</span>
-                            
-                            <span 
-                                onClick={() => handleNavigation('/donations')}
-                                style={{ 
-                                    color: '#333', 
-                                    textDecoration: 'none',
-                                    fontWeight: '500',
-                                    cursor: 'pointer'
-                                }}
-                            >DONACIONET</span>
-                        </nav>
-                        
-                        <button
-                            onClick={handleLogout}
-                            style={{
-                                background: 'linear-gradient(0deg, #dc3545 0%, #ff6b6b 100%)',
-                                color: 'white',
-                                border: 'none',
-                                padding: '8px 20px',
-                                borderRadius: '25px',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                fontWeight: '500',
-                                transition: 'all 0.3s ease'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.target.style.transform = 'translateY(-2px)';
-                                e.target.style.boxShadow = '0 5px 15px rgba(220,53,69,0.3)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.target.style.transform = 'translateY(0)';
-                                e.target.style.boxShadow = 'none';
-                            }}
-                        >
-                            Shkyçu
-                        </button>
-                    </div>
-                    
-                    {/* Butoni per menune mobile */}
-                    <button
-                        onClick={toggleMenu}
-                        style={{
-                            display: 'none',
-                            background: 'none',
-                            border: 'none',
-                            fontSize: '24px',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        ☰
-                    </button>
-                </div>
-                
-                {/* Menuja mobile */}
-                {isMenuOpen && (
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '15px',
-                        padding: '20px',
-                        backgroundColor: 'white',
-                        marginTop: '15px',
-                        borderTop: '1px solid #eee'
-                    }}>
-                        <span 
-                            onClick={() => {
-                                handleNavigation('/dashboard');
-                                setIsMenuOpen(false);
-                            }}
-                            style={{ color: '#333', cursor: 'pointer', fontWeight: '500' }}
-                        >DASHBOARD</span>
-                        <span 
-                            onClick={() => {
-                                handleNavigation('/campaign-categories');
-                                setIsMenuOpen(false);
-                            }}
-                            style={{ color: '#333', cursor: 'pointer', fontWeight: '500' }}
-                        >FUSHATA</span>
-                        <span 
-                            onClick={() => {
-                                handleNavigation('/donors');
-                                setIsMenuOpen(false);
-                            }}
-                            style={{ color: '#333', cursor: 'pointer', fontWeight: '500' }}
-                        >DONATORË</span>
-                        <span 
-                            onClick={() => {
-                                handleNavigation('/donations');
-                                setIsMenuOpen(false);
-                            }}
-                            style={{ color: '#333', cursor: 'pointer', fontWeight: '500' }}
-                        >DONACIONET</span>
-                        <button
-                            onClick={handleLogout}
-                            style={{
-                                background: '#dc3545',
-                                color: 'white',
-                                border: 'none',
-                                padding: '10px',
-                                borderRadius: '25px',
-                                cursor: 'pointer',
-                                fontWeight: '500'
-                            }}
-                        >
-                            Shkyçu
-                        </button>
-                    </div>
+            {/* Logo */}
+            <div onClick={() => handleNavigation('/dashboard')} style={{ cursor: 'pointer' }}>
+                {!imgError ? (
+                    <img src={logoSrc} alt="Logo" onError={() => setImgError(true)} style={{ height: '40px' }} />
+                ) : (
+                    <span style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Charity</span>
                 )}
             </div>
-        </header>
+
+            {/* Desktop Navigation */}
+            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                <span onClick={() => handleNavigation('/dashboard')} style={{ color: '#333', fontWeight: '500', cursor: 'pointer' }}>
+                    DASHBOARD
+                </span>
+                <span onClick={() => handleNavigation(fushataPath)} style={{ color: '#333', fontWeight: '500', cursor: 'pointer' }}>
+                    FUSHATA
+                </span>
+                <span onClick={() => handleNavigation(donorsPath)} style={{ color: '#333', fontWeight: '500', cursor: 'pointer' }}>
+                    DONATORË
+                </span>
+                <span onClick={() => handleNavigation('/donations')} style={{ color: '#333', fontWeight: '500', cursor: 'pointer' }}>
+                    DONACIONET
+                </span>
+                <button
+                    onClick={handleLogout}
+                    style={{
+                        backgroundColor: '#dc3545',
+                        color: 'white',
+                        border: 'none',
+                        padding: '0.3rem 1rem',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.target.style.transform = 'translateY(-2px)';
+                        e.target.style.boxShadow = '0 5px 15px rgba(220,53,69,0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = 'none';
+                    }}
+                >
+                    Shkyçu
+                </button>
+            </div>
+
+            {/* Mobile menu button (hidden on desktop) */}
+            <button onClick={toggleMenu} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', display: 'none' }}>
+                ☰
+            </button>
+
+            {/* Mobile menu dropdown */}
+            {isMenuOpen && (
+                <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1rem', gap: '0.5rem' }}>
+                    <span onClick={() => handleNavigation('/dashboard')}>DASHBOARD</span>
+                    <span onClick={() => handleNavigation(fushataPath)}>FUSHATA</span>
+                    <span onClick={() => handleNavigation(donorsPath)}>DONATORË</span>
+                    <span onClick={() => handleNavigation('/donations')}>DONACIONET</span>
+                    <button onClick={handleLogout}>Shkyçu</button>
+                </div>
+            )}
+        </div>
     );
 };
 
