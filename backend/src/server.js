@@ -34,6 +34,7 @@ const campaignCategoryRoutes = require('./routes/campaignCategoryRoutes');
 const donationRoutes = require('./routes/donationRoutes');
 const authRoutes = require('./routes/authRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const campaignRoutes = require('./routes/campaignRoutes');
 
 // ============================================
 // 4. LIDHUNI ME DATABAZEN
@@ -79,6 +80,7 @@ app.use('/api/campaign-categories', campaignCategoryRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/payments', paymentRoutes);  // <- Tani është PAS express.json()
 app.use('/api/donors', donorRoutes);
+app.use('/api/campaigns', campaignRoutes);
 
 // ============================================
 // 9. HEALTH CHECK

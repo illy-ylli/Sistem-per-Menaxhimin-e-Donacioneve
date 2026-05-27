@@ -39,8 +39,9 @@ const Header = () => {
     };
 
     const isAdmin = userRole === 'admin' || userRole === 'manager';
-    const fushataPath = isAdmin ? '/admin/campaign-categories' : '/user-campaigns';
-    const donorsPath = isAdmin ? '/admin/donors' : '/user-donors';   // NEW
+    // Only ONE declaration for fushataPath (points to admin campaigns page)
+    const fushataPath = isAdmin ? '/admin/campaigns' : '/user-campaigns';
+    const donorsPath = isAdmin ? '/admin/donors' : '/user-donors';
 
     const logoSrc = '/img/logo.png';
 
@@ -101,12 +102,12 @@ const Header = () => {
                 </button>
             </div>
 
-            {/* Mobile menu button (hidden on desktop) */}
+            {/* Mobile menu button (hidden on desktop, can be made responsive later) */}
             <button onClick={toggleMenu} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', display: 'none' }}>
                 ☰
             </button>
 
-            {/* Mobile menu dropdown */}
+            {/* Mobile menu dropdown (visible only when toggled) */}
             {isMenuOpen && (
                 <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1rem', gap: '0.5rem' }}>
                     <span onClick={() => handleNavigation('/dashboard')}>DASHBOARD</span>

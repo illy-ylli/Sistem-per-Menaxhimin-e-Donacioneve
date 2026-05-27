@@ -12,6 +12,8 @@ import Donations from './pages/Donations';
 import CampaignCategories from './pages/CampaignCategories';
 import UserCampaigns from './pages/UserCampaigns';
 import UserDonors from './pages/UserDonors';   // NEW import
+import AdminCampaigns from './pages/AdminCampaigns';
+
 
 function App() {
     return (
@@ -59,6 +61,7 @@ function App() {
                 {/* Default route */}
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="*" element={<Navigate to="/login" replace />} />
+                <Route path="/admin/campaigns" element={<AdminRoute><AdminCampaigns /></AdminRoute>} />
             </Routes>
         </BrowserRouter>
     );
