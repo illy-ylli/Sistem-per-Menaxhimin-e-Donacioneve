@@ -243,13 +243,14 @@ const handleDelete = async (id) => {
                             ) : (
                                 // Formulari i pagesës me Stripe
                                 <DonationCheckout 
-                                    amount={parseFloat(donationAmount)}
-                                    campaignId={campaignId}
-                                    donorName={user ? `${user.firstName} ${user.lastName}` : 'Donator'}
-                                    donorEmail={user?.email || ''}
-                                    onSuccess={handleDonationSuccess}
-                                    onClose={() => setShowCheckout(false)}
-                                />
+    amount={parseFloat(donationAmount)}
+    campaignId={campaignId}
+    donorName={user ? `${user.firstName} ${user.lastName}` : 'Donator'}
+    donorEmail={user?.email || ''}
+    isAnonymous={isAnonymous} 
+    onSuccess={handleDonationSuccess}
+    onClose={() => setShowCheckout(false)}
+/>
                             )}
                         </div>
                     </div>
