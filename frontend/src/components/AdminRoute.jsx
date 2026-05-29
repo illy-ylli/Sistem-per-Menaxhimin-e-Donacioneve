@@ -6,17 +6,20 @@ const AdminRoute = ({ children }) => {
     const token = Cookies.get('accessToken');
     
     if (!token) {
-        return <Navigate to="/login" />;
+        return <Navigate to="/login" replace />;
     }
     
     try {
         const decoded = jwtDecode(token);
+        // Vetëm admin dhe manager mund të hyjnë
         if (decoded.role === 'admin' || decoded.role === 'manager') {
             return children;
         }
-        return <Navigate to="/" />;
+        // Përdoruesit normal ridrejtohen në dashboard
+        return <Navigate to="/dashboard" replace />;
     } catch (error) {
-        return <Navigate to="/login" />;
+        console.error('AdminRoute error:', error);
+        return <Navigate to="/login" replace />;
     }
 };
 

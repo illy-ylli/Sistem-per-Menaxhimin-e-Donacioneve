@@ -2,7 +2,6 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
 // Ky model perfaqeson tabellen "donations" ne databaze
-// Ruan cdo donacion qe behet nga nje donator per nje fushate
 const Donation = sequelize.define('Donation', {
     id: {
         type: DataTypes.INTEGER,
@@ -13,7 +12,7 @@ const Donation = sequelize.define('Donation', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'campaigns',     // Lidhet me tabellen campaigns
+            model: 'campaigns',
             key: 'id'
         },
         comment: 'Fushata per te cilen eshte bere donacioni'
@@ -22,16 +21,16 @@ const Donation = sequelize.define('Donation', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'donors',        // Lidhet me tabellen donors
+            model: 'donors',
             key: 'id'
         },
         comment: 'Donatori qe ka bere donacionin'
     },
     shuma: {
-        type: DataTypes.DECIMAL(10, 2),  // Decimal me 10 shifra gjithsej, 2 pas presjes
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
         validate: {
-            min: 0.01,                   // Shuma minimale 0.01 euro
+            min: 0.01,
             isPositive(value) {
                 if (value <= 0) {
                     throw new Error('Shuma duhet te jete me e madhe se 0');
@@ -42,13 +41,13 @@ const Donation = sequelize.define('Donation', {
     },
     data: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,    // Data aktuale neqoftese nuk jepet
+        defaultValue: DataTypes.NOW,
         comment: 'Data kur eshte bere donacioni'
     },
     metoda_pageses: {
         type: DataTypes.ENUM('karte_krediti', 'paypal', 'bank_transfer', 'cash', 'other'),
         defaultValue: 'other',
-        comment: 'Mennya e pageses se donacionit'
+        comment: 'Metoda e pageses se donacionit'
     },
     mesazhi: {
         type: DataTypes.TEXT,
@@ -64,7 +63,7 @@ const Donation = sequelize.define('Donation', {
     statusi: {
         type: DataTypes.ENUM('pending', 'completed', 'failed', 'refunded'),
         defaultValue: 'pending',
-        comment: 'Statusi i donacionit (ne pritje, i perfunduar, deshtoi, rimbursuar)'
+        comment: 'Statusi i donacionit'
     },
     is_anonymous: {
         type: DataTypes.BOOLEAN,
@@ -74,28 +73,13 @@ const Donation = sequelize.define('Donation', {
 }, {
     tableName: 'donations',
     timestamps: true,
-    
-    // Indekset per performance me te mire ne kerkim
     indexes: [
-        {
-            fields: ['campaign_id']   // Indeks per te gjetur donacionet e nje fushate shpejt
-        },
-        {
-            fields: ['donor_id']      // Indeks per te gjetur donacionet e nje donatori shpejt
-        },
-        {
-            fields: ['data']          // Indeks per te filtruar sipas dates
-        }
+        { fields: ['campaign_id'] },
+        { fields: ['donor_id'] },
+        { fields: ['data'] }
     ]
 });
 
-// Metode ndihmese per te marre emrin e donatorit (anonim ose jo)
-// Kjo do te perdoret nga controller-i kur te dergojme pergjigjen
-Donation.prototype.getDonorName = function(donor) {
-    if (this.is_anonymous) {
-        return 'Donator Anonim';
-    }
-    return donor ? `${donor.emri} ${donor.mbiemri}` : 'Donator i panjohur';
-};
+
 
 module.exports = Donation;

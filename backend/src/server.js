@@ -35,6 +35,7 @@ const authRoutes = require('./routes/authRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const campaignRoutes = require('./routes/campaignRoutes');
 const donorRoutes = require('./routes/donorRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 // ============================================
 // DATABASE
@@ -86,6 +87,7 @@ app.use('/api/campaign-categories', campaignCategoryRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/campaigns', campaignRoutes);
 app.use('/api/donors', donorRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // ============================================
 // HEALTH CHECK
