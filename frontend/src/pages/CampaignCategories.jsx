@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';  // Shto këtë import
 import campaignCategoryService from '../services/campaignCategoryService';
 import toast from 'react-hot-toast';
+import { handleError, showSuccess, showWarning } from '../utils/errorHandler';
 
 const CampaignCategories = () => {
     const [categories, setCategories] = useState([]);
@@ -20,16 +21,16 @@ const CampaignCategories = () => {
     }, []);
     
     const loadCategories = async () => {
-        setIsLoading(true);
-        try {
-            const response = await campaignCategoryService.getAll();
-            setCategories(response.data);
-        } catch (error) {
-            toast.error('Gabim gjatë ngarkimit të kategorive');
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    setIsLoading(true);
+    try {
+        const response = await campaignCategoryService.getAll();
+        setCategories(response.data);
+    } catch (error) {
+        handleError(error, 'Gabim gjate ngarkimit te kategorive');
+    } finally {
+        setIsLoading(false);
+    }
+};
     
     const handleChange = (e) => {
         setFormData({
@@ -39,26 +40,35 @@ const CampaignCategories = () => {
     };
     
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        try {
-            if (editingId) {
-                await campaignCategoryService.update(editingId, formData);
-                toast.success('Kategoria u përditësua me sukses');
-            } else {
-                await campaignCategoryService.create(formData);
-                toast.success('Kategoria u krijua me sukses');
-            }
-            
-            setFormData({ emertimi: '', pershkrimi: '', ikona: '🎯', ngjyra: '#26a69a' });
-            setEditingId(null);
-            setShowForm(false);
-            loadCategories();
-            
-        } catch (error) {
-            toast.error(error.message || 'Gabim gjatë ruajtjes');
+    e.preventDefault();
+    
+    if (!formData.emertimi.trim()) {
+        toast.error('Emri i kategorise eshte i detyrueshem');
+        return;
+    }
+    
+    setIsLoading(true);
+    
+    try {
+        if (editingId) {
+            await campaignCategoryService.update(editingId, formData);
+            showSuccess('Kategoria u perditesua me sukses!');
+        } else {
+            await campaignCategoryService.create(formData);
+            showSuccess('Kategoria u krijua me sukses!');
         }
-    };
+        
+        setFormData({ emertimi: '', pershkrimi: '', ikona: '🎯', ngjyra: '#26a69a' });
+        setEditingId(null);
+        setShowForm(false);
+        await loadCategories();
+        
+    } catch (error) {
+        handleError(error, 'Gabim gjate ruajtjes se kategorise');
+    } finally {
+        setIsLoading(false);
+    }
+};
     
     const handleEdit = (category) => {
         setFormData({
@@ -72,16 +82,19 @@ const CampaignCategories = () => {
     };
     
     const handleDelete = async (id, emertimi) => {
-        if (window.confirm(`A jeni i sigurt që doni të fshini kategorinë "${emertimi}"?`)) {
-            try {
-                await campaignCategoryService.delete(id);
-                toast.success('Kategoria u fshi me sukses');
-                loadCategories();
-            } catch (error) {
-                toast.error(error.message || 'Gabim gjatë fshirjes');
-            }
+    if (window.confirm(`A jeni i sigurt qe doni te fshini kategorine "${emertimi}"?`)) {
+        setIsLoading(true);
+        try {
+            await campaignCategoryService.delete(id);
+            showSuccess(`Kategoria "${emertimi}" u fshi me sukses!`);
+            await loadCategories();
+        } catch (error) {
+            handleError(error, `Gabim gjate fshirjes se kategorise "${emertimi}"`);
+        } finally {
+            setIsLoading(false);
         }
-    };
+    }
+};
     
     return (
         <>

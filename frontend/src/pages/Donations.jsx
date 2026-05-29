@@ -4,6 +4,7 @@ import DonationCheckout from '../components/DonationCheckout';
 import donationService from '../services/donationService';
 import toast from 'react-hot-toast';
 import authService from '../services/authService';
+import { handleError, showSuccess, showWarning } from '../utils/errorHandler';
 
 const Donations = () => {
     const [donations, setDonations] = useState([]);
@@ -28,25 +29,16 @@ const Donations = () => {
     }, []);
     
     const loadDonations = async () => {
-        setIsLoading(true);
-        try {
-            let response;
-            if (filterCampaign) {
-                response = await donationService.getByCampaign(filterCampaign);
-            } else if (filterDonor) {
-                response = await donationService.getByDonor(filterDonor);
-            } else {
-                response = await donationService.getAll();
-            }
-            setDonations(response.data || []);
-        } catch (error) {
-            console.error('Gabim:', error);
-            toast.error('Gabim gjatë ngarkimit të donacioneve');
-            setDonations([]);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    setIsLoading(true);
+    try {
+        const response = await donationService.getAll();
+        setDonations(response.data);
+    } catch (error) {
+        handleError(error, 'Gabim gjate ngarkimit te donacioneve');
+    } finally {
+        setIsLoading(false);
+    }
+};
     
     const handleDonationSuccess = async () => {
         setShowCheckout(false);
@@ -66,27 +58,27 @@ const Donations = () => {
     };
     
     const handleUpdateStatus = async () => {
+    try {
+        await donationService.updateStatus(editingId, statusFormData.statusi);
+        showSuccess('Statusi i donacionit u përditësua');
+        setEditingId(null);
+        loadDonations();
+    } catch (error) {
+        handleError(error, 'Gabim gjatë përditësimit të statusit');
+    }
+};
+
+const handleDelete = async (id) => {
+    if (window.confirm('A jeni i sigurt që doni të fshini këtë donacion?')) {
         try {
-            await donationService.updateStatus(editingId, statusFormData.statusi);
-            toast.success('Statusi i donacionit u përditësua');
-            setEditingId(null);
+            await donationService.delete(id);
+            showSuccess('Donacioni u fshi me sukses');
             loadDonations();
         } catch (error) {
-            toast.error(error.message || 'Gabim gjatë përditësimit');
+            handleError(error, 'Gabim gjatë fshirjes së donacionit');
         }
-    };
-    
-    const handleDelete = async (id) => {
-        if (window.confirm('A jeni i sigurt që doni të fshini këtë donacion?')) {
-            try {
-                await donationService.delete(id);
-                toast.success('Donacioni u fshi me sukses');
-                loadDonations();
-            } catch (error) {
-                toast.error(error.message || 'Gabim gjatë fshirjes');
-            }
-        }
-    };
+    }
+};
     
     const getStatusBadge = (statusi) => {
         const statuses = {
