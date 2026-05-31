@@ -55,12 +55,22 @@ const AdminCampaigns = () => {
             toast.error('Ju lutem plotësoni të gjitha fushat e detyrueshme');
             return;
         }
+        // Check backend validation: description must be at least 10 characters
+        if (formData.pershkrimi.length < 10) {
+            toast.error('Përshkrimi duhet të ketë të paktën 10 karaktere');
+            return;
+        }
+        // Prepare data: convert empty category_id to null
+        const dataToSend = {
+            ...formData,
+            category_id: formData.category_id === '' ? null : parseInt(formData.category_id, 10)
+        };
         try {
             if (editingId) {
-                await api.put(`/campaigns/${editingId}`, formData);
+                await api.put(`/campaigns/${editingId}`, dataToSend);
                 toast.success('Fushata u përditësua me sukses');
             } else {
-                await api.post('/campaigns', formData);
+                await api.post('/campaigns', dataToSend);
                 toast.success('Fushata u krijua me sukses');
             }
             resetForm();
@@ -71,19 +81,19 @@ const AdminCampaigns = () => {
         }
     };
 
- const handleEdit = (campaign) => {
-    setFormData({
-        titulli: campaign.titulli || '',
-        pershkrimi: campaign.pershkrimi || '',
-        shuma_target: campaign.shuma_target || '',
-        data_fillimit: campaign.data_fillimit ? campaign.data_fillimit.split('T')[0] : '',
-        data_perfundimit: campaign.data_perfundimit ? campaign.data_perfundimit.split('T')[0] : '',
-        category_id: campaign.category_id || '',
-        statusi: campaign.statusi || 'ne_progres'
-    });
-    setEditingId(campaign.id);
-    setShowForm(true);
-};
+    const handleEdit = (campaign) => {
+        setFormData({
+            titulli: campaign.titulli || '',
+            pershkrimi: campaign.pershkrimi || '',
+            shuma_target: campaign.shuma_target || '',
+            data_fillimit: campaign.data_fillimit ? campaign.data_fillimit.split('T')[0] : '',
+            data_perfundimit: campaign.data_perfundimit ? campaign.data_perfundimit.split('T')[0] : '',
+            category_id: campaign.category_id ?? '',
+            statusi: campaign.statusi || 'ne_progres'
+        });
+        setEditingId(campaign.id);
+        setShowForm(true);
+    };
 
     const handleDelete = async (id, titulli) => {
         if (window.confirm(`A jeni i sigurt që doni të fshini fushatën "${titulli}"?`)) {
@@ -134,6 +144,7 @@ const AdminCampaigns = () => {
                                         <div className="col-12 mb-3">
                                             <label className="form-label">Përshkrimi *</label>
                                             <textarea name="pershkrimi" className="form-control" rows="3" value={formData.pershkrimi} onChange={handleChange} required></textarea>
+                                            <small className="text-muted">Minimumi 10 karaktere</small>
                                         </div>
                                         <div className="col-md-4 mb-3">
                                             <label className="form-label">Data e fillimit *</label>

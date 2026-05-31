@@ -21,7 +21,9 @@ const getDonorById = async (req, res) => {
 
 const createDonor = async (req, res) => {
     try {
-        const donor = await Donor.create(req.body);
+        // Destructure only allowed fields
+        const { emri, mbiemri, email, telefoni, adresa } = req.body;
+        const donor = await Donor.create({ emri, mbiemri, email, telefoni, adresa });
         res.status(201).json({ success: true, data: donor });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -32,7 +34,8 @@ const updateDonor = async (req, res) => {
     try {
         const donor = await Donor.findByPk(req.params.id);
         if (!donor) return res.status(404).json({ message: 'Donor not found' });
-        await donor.update(req.body);
+        const { emri, mbiemri, email, telefoni, adresa } = req.body;
+        await donor.update({ emri, mbiemri, email, telefoni, adresa });
         res.json({ success: true, data: donor });
     } catch (error) {
         res.status(500).json({ message: error.message });

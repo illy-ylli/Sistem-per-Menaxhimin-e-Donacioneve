@@ -21,10 +21,15 @@ const getCampaignById = async (req, res) => {
 
 const createCampaign = async (req, res) => {
     try {
+        console.log('📥 Received campaign data:', req.body);
         const campaign = await Campaign.create(req.body);
         res.status(201).json({ success: true, data: campaign });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('❌ Error creating campaign:', error);
+        res.status(400).json({ 
+            message: error.message,
+            details: error.errors ? error.errors.map(e => e.message) : error.parent?.sqlMessage
+        });
     }
 };
 
@@ -32,10 +37,16 @@ const updateCampaign = async (req, res) => {
     try {
         const campaign = await Campaign.findByPk(req.params.id);
         if (!campaign) return res.status(404).json({ message: 'Campaign not found' });
+
+        console.log(`📝 Updating campaign ${req.params.id} with data:`, req.body);
         await campaign.update(req.body);
         res.json({ success: true, data: campaign });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('❌ Error updating campaign:', error);
+        res.status(400).json({ 
+            message: error.message,
+            details: error.errors ? error.errors.map(e => e.message) : error.parent?.sqlMessage
+        });
     }
 };
 
