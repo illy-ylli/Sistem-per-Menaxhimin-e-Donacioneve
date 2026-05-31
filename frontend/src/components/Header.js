@@ -113,6 +113,9 @@ const Header = () => {
                         <span onClick={() => handleNavigation('/admin/campaign-categories')} style={{ color: '#dc3545', fontWeight: '500', cursor: 'pointer' }}>
                             📁 KATEGORITË
                         </span>
+                        <span onClick={() => handleNavigation('/admin/reports')} style={{ color: '#333', fontWeight: '500', cursor: 'pointer' }}>
+                            📊 RAPORTE
+                        </span>
                     </>
                 )}
                 

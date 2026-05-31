@@ -42,7 +42,9 @@ const AdminVolunteers = lazy(() => import('./pages/AdminVolunteers'));
 const UserVolunteers = lazy(() => import('./pages/UserVolunteers'));
 
 // CampaignVolunteers - Admin version (caktimi i vullnetarëve në fushata)
-const AdminCampaignVolunteers = lazy(() => import('./pages/AdminCampaignVolunteers'));
+const AdminCampaignVolunteers = lazy(() => import('./pages/AdminCampaignVolunteers.jsx'));
+
+const Reports = lazy(() => import('./pages/Reports'));
 
 // Loading Spinner
 const LoadingSpinner = () => (
@@ -109,6 +111,7 @@ function App() {
                     <Route path="/admin/campaign-volunteers" element={
                         <AdminRoute><AdminCampaignVolunteers /></AdminRoute>
                     } />
+                    <Route path="/admin/reports" element={<AdminRoute><Reports /></AdminRoute>} />
 
                     {/* ============================================
                         USER ROUTES (vetem lexim - per perdoruesit normal)
