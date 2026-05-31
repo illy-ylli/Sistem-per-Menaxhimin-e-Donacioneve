@@ -64,7 +64,7 @@ const Header = () => {
     const donorsPath = isAdmin ? '/admin/donors' : '/donors';
     const donationsPath = '/donations';
     const dashboardPath = '/dashboard';
-
+    const volunteersPath = isAdmin ? '/admin/volunteers' : '/user-volunteers';
     const logoSrc = '/img/logo.png';
 
     return (
@@ -102,6 +102,9 @@ const Header = () => {
                 </span>
                 <span onClick={() => handleNavigation(donationsPath)} style={{ color: '#333', fontWeight: '500', cursor: 'pointer' }}>
                     DONACIONET
+                </span>
+                <span onClick={() => handleNavigation(volunteersPath)} style={{ color: '#333', fontWeight: '500', cursor: 'pointer' }}>
+                    VOLUNTARËT
                 </span>
                 
                 {/* Linket vetëm për Admin/Manager */}
@@ -168,6 +171,7 @@ const Header = () => {
                     <span onClick={() => handleNavigation(fushataPath)} style={{ cursor: 'pointer' }}>FUSHATA</span>
                     <span onClick={() => handleNavigation(donorsPath)} style={{ cursor: 'pointer' }}>DONATORË</span>
                     <span onClick={() => handleNavigation(donationsPath)} style={{ cursor: 'pointer' }}>DONACIONET</span>
+                    <span onClick={() => handleNavigation(volunteersPath)}>VOLUNTARËT</span>
                     {isAdmin && (
                         <span onClick={() => handleNavigation('/admin/campaign-categories')} style={{ cursor: 'pointer', color: '#dc3545' }}>
                             KATEGORITË

@@ -2,7 +2,9 @@ import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import AdminRoute from './components/AdminRoute';
+import AuthRoute from './components/AuthRoute';
 import PrivateRoute from './components/PrivateRoute';
+
 
 // ============================================
 // LAZY LOADING - TE GJITHA KOMPONENTET
@@ -32,6 +34,15 @@ const AdminDonors = lazy(() => import('./pages/Donors'));
 
 // Donors - User version (vetem lexim)
 const UserDonors = lazy(() => import('./pages/UserDonors'));
+
+// Volunteers - Admin version (me CRUD)
+const AdminVolunteers = lazy(() => import('./pages/AdminVolunteers'));
+
+// Volunteers - User version (vetem lexim)
+const UserVolunteers = lazy(() => import('./pages/UserVolunteers'));
+
+// CampaignVolunteers - Admin version (caktimi i vullnetarëve në fushata)
+const AdminCampaignVolunteers = lazy(() => import('./pages/AdminCampaignVolunteers'));
 
 // Loading Spinner
 const LoadingSpinner = () => (
@@ -76,17 +87,6 @@ function App() {
                     } />
                     
                     {/* ============================================
-                        USER ROUTES (vetem lexim - per perdoruesit normal)
-                    ============================================ */}
-                    <Route path="/campaigns" element={
-                        <PrivateRoute><UserCampaigns /></PrivateRoute>
-                    } />
-                    
-                    <Route path="/donors" element={
-                        <PrivateRoute><UserDonors /></PrivateRoute>
-                    } />
-                    
-                    {/* ============================================
                         ADMIN ROUTES (CRUD - per admin/manager)
                     ============================================ */}
                     <Route path="/admin/campaign-categories" element={
@@ -101,6 +101,30 @@ function App() {
                         <AdminRoute><AdminDonors /></AdminRoute>
                     } />
                     
+                    <Route path="/admin/volunteers" element={
+                        <AdminRoute><AdminVolunteers /></AdminRoute>
+                    } />
+
+                    {/* NEW: CampaignVolunteers admin route */}
+                    <Route path="/admin/campaign-volunteers" element={
+                        <AdminRoute><AdminCampaignVolunteers /></AdminRoute>
+                    } />
+
+                    {/* ============================================
+                        USER ROUTES (vetem lexim - per perdoruesit normal)
+                    ============================================ */}
+                    <Route path="/campaigns" element={
+                        <PrivateRoute><UserCampaigns /></PrivateRoute>
+                    } />
+                    
+                    <Route path="/donors" element={
+                        <PrivateRoute><UserDonors /></PrivateRoute>
+                    } />
+                    
+                    <Route path="/user-volunteers" element={
+                        <PrivateRoute><UserVolunteers /></PrivateRoute>
+                    } />
+
                     {/* ============================================
                         DEFAULT ROUTES
                     ============================================ */}
