@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import authService from '../services/authService';
 import toast from 'react-hot-toast';
+import { handleError, showSuccess } from '../utils/errorHandler';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -22,42 +23,25 @@ const Login = () => {
     };
     
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        // Validimi
-        if (!formData.email || !formData.password) {
-            setError('Ju lutem plotësoni të gjitha fushat');
-            toast.error('Ju lutem plotësoni të gjitha fushat');
-            return;
-        }
-        
-        setIsLoading(true);
-        setError('');
-        
-        try {
-            const result = await authService.login(formData);
-            toast.success(`Mirë se vini, ${result.user.firstName}!`);
-            navigate('/dashboard');
-        } catch (error) {
-            // Trajtimi i errorave te ndryshem
-            let errorMessage = 'Login dështoi. Provoni përsëri.';
-            
-            if (error.message === 'Invalid credentials') {
-                errorMessage = 'Email ose fjalëkalim i gabuar. Ju lutem provoni përsëri.';
-            } else if (error.message === 'Account is deactivated') {
-                errorMessage = 'Llogaria juaj është e çaktivizuar. Kontaktoni administratorin.';
-            } else if (error.message === 'User not found') {
-                errorMessage = 'Ky email nuk ekziston. Ju lutem regjistrohuni.';
-            } else if (error.errors) {
-                errorMessage = error.errors[0]?.msg || errorMessage;
-            }
-            
-            setError(errorMessage);
-            toast.error(errorMessage);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    e.preventDefault();
+    
+    if (!formData.email || !formData.password) {
+        toast.error('Ju lutem plotesoni te gjitha fushat');
+        return;
+    }
+    
+    setIsLoading(true);
+    
+    try {
+        const result = await authService.login(formData);
+        showSuccess(`Mire se vini, ${result.user.firstName}!`);
+        navigate('/dashboard');
+    } catch (error) {
+        handleError(error, 'Login deshtoi. Kontrolloni email dhe fjalekalimin.');
+    } finally {
+        setIsLoading(false);
+    }
+};
     
     return (
         <div className="donate-area relative section-gap" style={{minHeight: '100vh'}}>

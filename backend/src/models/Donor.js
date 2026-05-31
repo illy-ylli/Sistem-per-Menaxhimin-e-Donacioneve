@@ -1,7 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
-// MODEL I PËRKOHSHËM - DO TË ZËVENDËSOHET ME VERSIONIN E PLOTË MË VONË
 const Donor = sequelize.define('Donor', {
     id: {
         type: DataTypes.INTEGER,
@@ -10,25 +9,22 @@ const Donor = sequelize.define('Donor', {
     },
     emri: {
         type: DataTypes.STRING(100),
-        allowNull: false,
-        defaultValue: 'Temp'
+        allowNull: false
     },
     mbiemri: {
         type: DataTypes.STRING(100),
-        allowNull: false,
-        defaultValue: 'Donor'
+        allowNull: false
     },
     email: {
         type: DataTypes.STRING(255),
         allowNull: false,
-        defaultValue: 'temp@donor.com'
+        unique: true
     },
-    telefoni: { type: DataTypes.STRING,
-         allowNull: true 
-        },
-    adresa: { type: DataTypes.STRING, 
-        allowNull: true 
-    }
+    // Këto kolona mund të mos ekzistojnë në DB - komentoji ose shtoji në DB
+    // telefoni: { type: DataTypes.STRING, allowNull: true },
+    // adresa: { type: DataTypes.STRING, allowNull: true },
+    // total_dhuruar: { type: DataTypes.DECIMAL(10,2), defaultValue: 0 },
+    // donation_count: { type: DataTypes.INTEGER, defaultValue: 0 }
 }, {
     tableName: 'donors',
     timestamps: true

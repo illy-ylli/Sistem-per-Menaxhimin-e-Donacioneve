@@ -1,19 +1,46 @@
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import AdminRoute from './components/AdminRoute';
-import AuthRoute from './components/AuthRoute';
 import PrivateRoute from './components/PrivateRoute';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import Campaigns from './pages/Campaigns';
-import Donors from './pages/Donors';
-import Donations from './pages/Donations';
-import CampaignCategories from './pages/CampaignCategories';
-import UserCampaigns from './pages/UserCampaigns';
-import UserDonors from './pages/UserDonors';   // NEW import
-import AdminCampaigns from './pages/AdminCampaigns';
 
+// ============================================
+// LAZY LOADING - TE GJITHA KOMPONENTET
+// ============================================
+
+// Public pages
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+
+// Dashboard
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+
+// Donations
+const Donations = lazy(() => import('./pages/Donations'));
+
+// Campaign Categories (Admin only)
+const CampaignCategories = lazy(() => import('./pages/CampaignCategories'));
+
+// Campaigns - Admin version (me CRUD)
+const AdminCampaigns = lazy(() => import('./pages/AdminCampaigns'));
+
+// Campaigns - User version (vetem lexim)
+const UserCampaigns = lazy(() => import('./pages/UserCampaigns'));
+
+// Donors - Admin version (me CRUD)
+const AdminDonors = lazy(() => import('./pages/Donors'));
+
+// Donors - User version (vetem lexim)
+const UserDonors = lazy(() => import('./pages/UserDonors'));
+
+// Loading Spinner
+const LoadingSpinner = () => (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Duke ngarkuar...</span>
+        </div>
+    </div>
+);
 
 function App() {
     return (
@@ -29,40 +56,58 @@ function App() {
                 }}
             />
             
-            <Routes>
-                {/* Public routes */}
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                
-                {/* Protected routes - need login */}
-                <Route path="/dashboard" element={
-                    <PrivateRoute><Dashboard /></PrivateRoute>
-                } />
-                
-                {/* User routes (accessible to any logged-in user) */}
-                <Route path="/campaigns" element={<AuthRoute><Campaigns /></AuthRoute>} />
-                {/* REMOVE the old /donors user route – we'll replace with role‑based */}
-                <Route path="/donations" element={
-                    <PrivateRoute><Donations /></PrivateRoute>
-                } />
-                
-                {/* Public user‑facing placeholders (regular users) */}
-                <Route path="/user-campaigns" element={<UserCampaigns />} />
-                <Route path="/user-donors" element={<UserDonors />} />   {/* NEW placeholder route */}
-                
-                {/* Admin‑only routes */}
-                <Route path="/admin/campaign-categories" element={
-                    <AdminRoute><CampaignCategories /></AdminRoute>
-                } />
-                <Route path="/admin/donors" element={
-                    <AdminRoute><Donors /></AdminRoute>
-                } />   {/* Admin full CRUD */}
-                
-                {/* Default route */}
-                <Route path="/" element={<Navigate to="/login" replace />} />
-                <Route path="*" element={<Navigate to="/login" replace />} />
-                <Route path="/admin/campaigns" element={<AdminRoute><AdminCampaigns /></AdminRoute>} />
-            </Routes>
+            <Suspense fallback={<LoadingSpinner />}>
+                <Routes>
+                    {/* ============================================
+                        PUBLIC ROUTES (pa login)
+                    ============================================ */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    
+                    {/* ============================================
+                        PROTECTED ROUTES (ka nevoje per login)
+                    ============================================ */}
+                    <Route path="/dashboard" element={
+                        <PrivateRoute><Dashboard /></PrivateRoute>
+                    } />
+                    
+                    <Route path="/donations" element={
+                        <PrivateRoute><Donations /></PrivateRoute>
+                    } />
+                    
+                    {/* ============================================
+                        USER ROUTES (vetem lexim - per perdoruesit normal)
+                    ============================================ */}
+                    <Route path="/campaigns" element={
+                        <PrivateRoute><UserCampaigns /></PrivateRoute>
+                    } />
+                    
+                    <Route path="/donors" element={
+                        <PrivateRoute><UserDonors /></PrivateRoute>
+                    } />
+                    
+                    {/* ============================================
+                        ADMIN ROUTES (CRUD - per admin/manager)
+                    ============================================ */}
+                    <Route path="/admin/campaign-categories" element={
+                        <AdminRoute><CampaignCategories /></AdminRoute>
+                    } />
+                    
+                    <Route path="/admin/campaigns" element={
+                        <AdminRoute><AdminCampaigns /></AdminRoute>
+                    } />
+                    
+                    <Route path="/admin/donors" element={
+                        <AdminRoute><AdminDonors /></AdminRoute>
+                    } />
+                    
+                    {/* ============================================
+                        DEFAULT ROUTES
+                    ============================================ */}
+                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                </Routes>
+            </Suspense>
         </BrowserRouter>
     );
 }

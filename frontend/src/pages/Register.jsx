@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import authService from '../services/authService';
 import toast from 'react-hot-toast';
+import { handleError, showSuccess } from '../utils/errorHandler';
 
 const Register = () => {
     // te dhenat e formularit
@@ -27,40 +28,36 @@ const Register = () => {
     
     // trajton dergimin e formularit
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        // verifikon fushat e zbrazeta
-        if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
-            toast.error('Ju lutem plotësoni të gjitha fushat');
-            return;
-        }
-        
-        // verifikon nese fjalekalimet perputhen
-        if (formData.password !== formData.confirmPassword) {
-            toast.error('Fjalëkalimet nuk përputhen');
-            return;
-        }
-        
-        // verifikon gjatesine e fjalekalimit
-        if (formData.password.length < 6) {
-            toast.error('Fjalëkalimi duhet të ketë të paktën 6 karaktere');
-            return;
-        }
-        
-        setIsLoading(true);
-        
-        try {
-            // heq confirmPassword para regjistrimit
-            const { confirmPassword, ...registerData } = formData;
-            const result = await authService.register(registerData);
-            toast.success(`Mirë se vini, ${result.user.firstName}!`);
-            navigate('/dashboard'); // ridrejton ne dashboard
-        } catch (error) {
-            toast.error(error.message || 'Regjistrimi dështoi. Email-i mund të jetë në përdorim.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    e.preventDefault();
+    
+    if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
+        toast.error('Ju lutem plotesoni te gjitha fushat');
+        return;
+    }
+    
+    if (formData.password !== formData.confirmPassword) {
+        toast.error('Fjalekalimet nuk perputhen');
+        return;
+    }
+    
+    if (formData.password.length < 6) {
+        toast.error('Fjalekalimi duhet te kete te pakten 6 karaktere');
+        return;
+    }
+    
+    setIsLoading(true);
+    
+    try {
+        const { confirmPassword, ...registerData } = formData;
+        const result = await authService.register(registerData);
+        showSuccess(`Mire se vini, ${result.user.firstName}!`);
+        navigate('/dashboard');
+    } catch (error) {
+        handleError(error, 'Regjistrimi deshtoi. Email-i mund te jete ne perdorim.');
+    } finally {
+        setIsLoading(false);
+    }
+};
     
     return (
         <div className="donate-area relative section-gap" style={{minHeight: '100vh'}}>
