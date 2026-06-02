@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 const PrivateRoute = ({ children }) => {
-    // Kontrollo në mënyrë direkte nëse token ekziston
+    // kontrollo ne menyre direkte nese token ekziston
     const token = Cookies.get('accessToken');
     const isAuthenticated = !!token;
     

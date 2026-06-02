@@ -59,7 +59,7 @@ const Header = () => {
 
     const isAdmin = userRole === 'admin' || userRole === 'manager';
     
-    // Rrugët sipas App.js
+    // rruget sipas App.js
     const fushataPath = isAdmin ? '/admin/campaigns' : '/campaigns';
     const donorsPath = isAdmin ? '/admin/donors' : '/donors';
     const donationsPath = '/donations';
@@ -158,7 +158,7 @@ const Header = () => {
                 ☰
             </button>
 
-            {/* Mobile menu dropdown */}
+            {/* mobile menu dropdown */}
             {isMenuOpen && (
                 <div style={{ 
                     width: '100%', 

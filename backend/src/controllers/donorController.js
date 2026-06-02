@@ -21,7 +21,7 @@ const getDonorById = async (req, res) => {
 
 const createDonor = async (req, res) => {
     try {
-        // Destructure only allowed fields
+        // DESTRUCTURE ONLY ALLOWED FIELDS
         const { emri, mbiemri, email, telefoni, adresa } = req.body;
         const donor = await Donor.create({ emri, mbiemri, email, telefoni, adresa });
         res.status(201).json({ success: true, data: donor });

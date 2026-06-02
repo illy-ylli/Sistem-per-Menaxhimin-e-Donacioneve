@@ -12,11 +12,11 @@ const {
 
 router.route('/')
     .get(protect, getAllCampaigns)
-    .post(protect, authorize('admin', 'manager'), validateCampaign, createCampaign);  // ✅ Shto validimin
+    .post(protect, authorize('admin', 'manager'), validateCampaign, createCampaign);  
 
 router.route('/:id')
     .get(protect, getCampaignById)
-    .put(protect, authorize('admin', 'manager'), validateCampaign, updateCampaign)  // ✅ Shto validimin
+    .put(protect, authorize('admin', 'manager'), validateCampaign, updateCampaign) 
     .delete(protect, authorize('admin'), deleteCampaign);
 
 module.exports = router;

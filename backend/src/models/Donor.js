@@ -9,22 +9,26 @@ const Donor = sequelize.define('Donor', {
     },
     emri: {
         type: DataTypes.STRING(100),
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'Temp'
     },
     mbiemri: {
         type: DataTypes.STRING(100),
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'Donor'
     },
     email: {
         type: DataTypes.STRING(255),
         allowNull: false,
-        unique: true
+        defaultValue: 'temp@donor.com'
     },
-    // Këto kolona mund të mos ekzistojnë në DB - komentoji ose shtoji në DB
-    // telefoni: { type: DataTypes.STRING, allowNull: true },
-    // adresa: { type: DataTypes.STRING, allowNull: true },
-    // total_dhuruar: { type: DataTypes.DECIMAL(10,2), defaultValue: 0 },
-    // donation_count: { type: DataTypes.INTEGER, defaultValue: 0 }
+    telefoni: { type: DataTypes.STRING,
+         allowNull: true 
+        },
+    adresa: { type: DataTypes.STRING, 
+        allowNull: true 
+    }
+    
 }, {
     tableName: 'donors',
     timestamps: true

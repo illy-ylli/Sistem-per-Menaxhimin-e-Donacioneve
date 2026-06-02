@@ -98,8 +98,8 @@ const CampaignCategories = () => {
     
     return (
         <>
-            <Header />  {/* Shto Header-in këtu */}
-            <div style={{ paddingTop: '80px' }}>  {/* Shto padding për header-in fixed */}
+            <Header />  {}
+            <div style={{ paddingTop: '80px' }}>  {}
                 <div className="container mt-5">
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h1>Menaxhimi i Kategorive të Fushatave</h1>

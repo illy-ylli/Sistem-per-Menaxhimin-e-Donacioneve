@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-// Importojme middlewaret per autentikim
+// import
 const { protect, authorize } = require('../middleware/authMiddleware');
 
-// Importojme validimin
+// import
 const { validateCategory } = require('../middleware/validate');
 
-// Importojme funksionet e controller-it
+// import
 const {
     getAllCategories,
     getCategoryById,
@@ -20,18 +20,14 @@ const {
 // ROUTES PER KATEGORITE E FUSHATAVE
 // ============================================
 
-// GET /api/campaign-categories - Merr te gjitha kategorite
-// POST /api/campaign-categories - Krijo nje kategori te re (vetem admin/manager)
 router.route('/')
     .get(protect, getAllCategories)
-    .post(protect, authorize('admin', 'manager'), validateCategory, createCategory);  // ← Shto validateCategory KETU!
+    .post(protect, authorize('admin', 'manager'), validateCategory, createCategory);  //  shto validateCategory 
 
-// GET /api/campaign-categories/:id - Merr nje kategori specifike
-// PUT /api/campaign-categories/:id - Perditeso nje kategori (vetem admin/manager)
-// DELETE /api/campaign-categories/:id - Fshi nje kategori (vetem admin)
+
 router.route('/:id')
     .get(protect, getCategoryById)
-    .put(protect, authorize('admin', 'manager'), validateCategory, updateCategory)  // ← Shto validateCategory KETU!
+    .put(protect, authorize('admin', 'manager'), validateCategory, updateCategory)  //  shto validateCategory 
     .delete(protect, authorize('admin'), deleteCategory);
 
 module.exports = router;

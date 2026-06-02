@@ -9,7 +9,7 @@ const getAllDonations = async (req, res) => {
     try {
         let donations;
         
-        // Nese perdoruesi eshte admin/manager, merr te gjitha donacionet
+        // nese perdoruesi/role eshte admin/manager, merr te gjitha donacionet
         if (req.user.role === 'admin' || req.user.role === 'manager') {
             donations = await Donation.findAll({
                 include: [
@@ -19,7 +19,7 @@ const getAllDonations = async (req, res) => {
                 order: [['createdAt', 'DESC']]
             });
         } else {
-            // Perdorues normal - merr donacionet e tij/saj
+            // user normal - merr donacionet e tij/saj
             const donor = await Donor.findOne({ where: { email: req.user.email } });
             if (donor) {
                 donations = await Donation.findAll({
@@ -99,7 +99,7 @@ const createDonation = async (req, res) => {
             });
         }
         
-        // Gjej ose krijo donor-in e lidhur me kete user
+        // gjej ose krijo donor-in e lidhur me kete user
         let donor = await Donor.findOne({ where: { email: req.user.email } });
         
         if (!donor) {
@@ -114,7 +114,7 @@ const createDonation = async (req, res) => {
             console.log('✅ Donatori i ri u krijua:', donor.id);
         }
         
-        // Krijo donacionin
+        // krijo donacionin
         const donation = await Donation.create({
             campaign_id,
             donor_id: donor.id,
@@ -128,7 +128,7 @@ const createDonation = async (req, res) => {
         
         console.log('✅ Donacioni u krijua:', donation.id);
         
-        // Perditeso shumen e mbledhur te fushatës
+        // update shumen e mbledhur te fushatës
         const campaign = await Campaign.findByPk(campaign_id);
         if (campaign) {
             const totalForCampaign = await Donation.sum('shuma', {
@@ -138,7 +138,7 @@ const createDonation = async (req, res) => {
             console.log(`✅ Fushata ${campaign_id} u perditesua: ${totalForCampaign}€`);
         }
         
-        // Perditeso totalin e donatorit
+        // update totalin e donatorit
         const totalDonated = await Donation.sum('shuma', {
             where: { donor_id: donor.id, statusi: 'completed' }
         });
@@ -167,7 +167,7 @@ const createDonation = async (req, res) => {
 };
 
 // ============================================
-// 4. PERDITESO STATUSIN E NJE DONACIONI
+// 4. UPDATE STATUSIN E NJE DONACIONI
 // ============================================
 const updateDonationStatus = async (req, res) => {
     try {
@@ -185,7 +185,7 @@ const updateDonationStatus = async (req, res) => {
         
         await donation.update({ statusi: newStatus });
         
-        // Nese statusi ndryshon nga 'pending' ne 'completed', perditeso totalet
+        // nese statusi ndryshon nga 'pending' ne 'completed', update totalet
         if (oldStatus === 'pending' && newStatus === 'completed') {
             const campaign = await Campaign.findByPk(donation.campaign_id);
             if (campaign) {
@@ -239,7 +239,7 @@ const deleteDonation = async (req, res) => {
             });
         }
         
-        // Para se te fshish, zbrit shumen nga fushata dhe donatori
+        // para se me fshi, zbrit shumen nga fushata dhe donatori
         if (donation.statusi === 'completed') {
             const campaign = await Campaign.findByPk(donation.campaign_id);
             if (campaign) {

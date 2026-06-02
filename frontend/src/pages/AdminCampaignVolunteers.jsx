@@ -78,13 +78,13 @@ const AdminCampaignVolunteers = () => {
         }
     };
 
-    // Helper to get campaign title by id
+    // helper to get campaign title by id
     const getCampaignTitle = (id) => {
         const campaign = campaigns.find(c => c.id === id);
         return campaign ? campaign.titulli : '?';
     };
 
-    // Helper to get volunteer name by id
+    // helper to get volunteer name by id
     const getVolunteerName = (id) => {
         const volunteer = volunteers.find(v => v.id === id);
         return volunteer ? `${volunteer.emri} ${volunteer.mbiemri}` : '?';

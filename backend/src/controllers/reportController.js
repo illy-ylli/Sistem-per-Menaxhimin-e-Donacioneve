@@ -58,7 +58,7 @@ const getExpensesPerCampaign = async (req, res) => {
     }
 };
 
-// 4. Campaign summary (target, collected, expenses, net)
+// 4. Campaign summary (PER TARGET, COLLECTED, EXPENSES, DHE NET)
 const getCampaignSummary = async (req, res) => {
     try {
         const campaigns = await Campaign.findAll({

@@ -13,7 +13,7 @@ const Campaign = sequelize.define('Campaign', {
     },
     pershkrimi: {
         type: DataTypes.TEXT,
-        allowNull: true          // ✅ changed to nullable
+        allowNull: true          
     },
     shuma_target: {
         type: DataTypes.DECIMAL(10, 2),
@@ -26,16 +26,16 @@ const Campaign = sequelize.define('Campaign', {
     },
     data_fillimit: {
         type: DataTypes.DATEONLY,
-        allowNull: true          // ✅ changed to nullable
+        allowNull: true          
     },
     data_perfundimit: {
         type: DataTypes.DATEONLY,
-        allowNull: true          // ✅ changed to nullable
+        allowNull: true          
     },
     statusi: {
         type: DataTypes.ENUM('aktive', 'ne_progres', 'perfunduar', 'anuluar'),
         defaultValue: 'ne_progres',
-        allowNull: true          // ✅ changed to nullable (optional)
+        allowNull: true          
     },
     category_id: {
         type: DataTypes.INTEGER,

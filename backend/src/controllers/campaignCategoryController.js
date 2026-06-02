@@ -8,19 +8,18 @@ const CampaignCategory = require('../models/CampaignCategory');
 // Kush mund ta perdore: Perdorues te autentikuar (me token)
 const getAllCategories = async (req, res) => {
     try {
-        // CampaignCategory.findAll() = SELECT * FROM campaign_categories
         const categories = await CampaignCategory.findAll({
             order: [['emertimi', 'ASC']]  // Rendit sipas emrit A-Z
         });
         
-        // Dergo pergjigjen si JSON
+        // kthehet si json
         res.json({ 
             success: true, 
-            count: categories.length,      // Sa kategori u gjeten
+            count: categories.length,      // sa kategori u gjeten
             data: categories 
         });
     } catch (error) {
-        // Neqoftese ka gabim, dergo status 500 (Internal Server Error)
+        // nqoftese ka gabim, dergo status 500 / Internal Server Error
         res.status(500).json({ 
             success: false, 
             message: error.message 
@@ -35,10 +34,9 @@ const getAllCategories = async (req, res) => {
 // Shembull: GET /api/campaign-categories/5
 const getCategoryById = async (req, res) => {
     try {
-        // CampaignCategory.findByPk() = SELECT * FROM campaign_categories WHERE id = ?
         const category = await CampaignCategory.findByPk(req.params.id);
         
-        // Neqoftese nuk ekziston, kthe gabim 404 (Not Found)
+        // nqoftese nuk ekziston, kthe gabim 404 / Not Found
         if (!category) {
             return res.status(404).json({ 
                 success: false, 
@@ -63,7 +61,7 @@ const getCategoryById = async (req, res) => {
 // Shembull: dergo JSON me { emertimi: "Mjedisi", pershkrimi: "...", ikona: "🌍" }
 const createCategory = async (req, res) => {
     try {
-        // Kontrollo neqoftese ekziston tashme nje kategori me te njejtin emer
+        // kqyre neqoftese ekziston tashme nje kategori me te njejtin emer
         const existingCategory = await CampaignCategory.findOne({
             where: { emertimi: req.body.emertimi }
         });
@@ -75,10 +73,9 @@ const createCategory = async (req, res) => {
             });
         }
         
-        // CampaignCategory.create() = INSERT INTO campaign_categories VALUES (...)
         const category = await CampaignCategory.create(req.body);
         
-        // Status 201 = Created (e krijuar me sukses)
+        // Status 201 = Created / e krijuar me sukses
         res.status(201).json({ 
             success: true, 
             data: category,
@@ -99,7 +96,7 @@ const createCategory = async (req, res) => {
 // Kush mund ta perdore: Admin ose Manager
 const updateCategory = async (req, res) => {
     try {
-        // Gjej kategorine qe do te perditesohet
+        // gjeje kategorine qe do te perditesohet
         const category = await CampaignCategory.findByPk(req.params.id);
         
         if (!category) {
@@ -109,7 +106,7 @@ const updateCategory = async (req, res) => {
             });
         }
         
-        // Kontrollo nese emri i ri eshte tashme ne perdorim nga nje kategori tjeter
+        // kqyre nese emri i ri eshte tashme ne perdorim nga nje kategori tjeter
         if (req.body.emertimi && req.body.emertimi !== category.emertimi) {
             const existingCategory = await CampaignCategory.findOne({
                 where: { emertimi: req.body.emertimi }
@@ -122,7 +119,6 @@ const updateCategory = async (req, res) => {
             }
         }
         
-        // category.update() = UPDATE campaign_categories SET ... WHERE id = ?
         await category.update(req.body);
         
         res.json({ 
@@ -154,10 +150,8 @@ const deleteCategory = async (req, res) => {
             });
         }
         
-        // Para se te fshijme, kontrollojme neqoftese ka fushata qe e perdorin kete kategori
-        // (Kjo do te shtohet me vone kur te kemi modelin Campaign)
+        // para se me fshi, kontrollojme neqoftese ka fushata qe e perdorin kete kategori
         
-        // category.destroy() = DELETE FROM campaign_categories WHERE id = ?
         await category.destroy();
         
         res.json({ 
@@ -172,7 +166,7 @@ const deleteCategory = async (req, res) => {
     }
 };
 
-// Eksportojme te gjitha funksionet qe te perdoren ne routes
+// export kejt funksionet qe te perdoren ne routes
 module.exports = {
     getAllCategories,
     getCategoryById,

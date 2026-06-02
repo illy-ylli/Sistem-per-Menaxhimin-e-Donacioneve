@@ -75,7 +75,7 @@ const handleWebhook = async (req, res) => {
         if (webhookSecret && webhookSecret !== '') {
             event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
         } else {
-            // Për zhvillim lokal - anashkalo verifikimin
+            //  zhvillim lokal - anashkalo verifikimin
             event = JSON.parse(req.body.toString());
         }
     } catch (err) {
@@ -85,7 +85,7 @@ const handleWebhook = async (req, res) => {
     
     console.log('Event type:', event.type);
     
-    // Trajto pagesën e suksesshme
+    // trajto pagesën e suksesshme
     if (event.type === 'payment_intent.succeeded') {
         const paymentIntent = event.data.object;
         const metadata = paymentIntent.metadata;
@@ -98,7 +98,7 @@ const handleWebhook = async (req, res) => {
         const transaction = await sequelize.transaction();
         
         try {
-            // Kontrollo nëse donacioni ekziston tashmë (për të shmangur dublikimet)
+            // kontrolo nese donacioni ekziston tashme 
             const existingDonation = await Donation.findOne({
                 where: { transaction_id: paymentIntent.id }
             });
@@ -109,7 +109,7 @@ const handleWebhook = async (req, res) => {
                 return res.json({ received: true, message: 'Duplicate ignored' });
             }
             
-            // Gjej ose krijo donatorin
+            // gjej ose krijo donatorin
             let donor = await Donor.findOne({
                 where: { email: metadata.donor_email }
             });
@@ -128,7 +128,7 @@ const handleWebhook = async (req, res) => {
                 console.log(`✅ Donatori ekzistues: ID ${donor.id}`);
             }
             
-            // Krijo donacionin
+            // krijo donacionin
             const donation = await Donation.create({
                 campaign_id: parseInt(metadata.campaign_id),
                 donor_id: donor.id,
@@ -142,7 +142,7 @@ const handleWebhook = async (req, res) => {
             
             console.log(`✅ Donacioni u krijua: ID ${donation.id}`);
             
-            // Përditëso shumën e mbledhur të fushatës
+            // update shumen e mbledhur te fushates
             const campaign = await Campaign.findByPk(parseInt(metadata.campaign_id));
             if (campaign) {
                 const currentCollected = parseFloat(campaign.shuma_mbledhur || 0);
@@ -153,7 +153,7 @@ const handleWebhook = async (req, res) => {
                 console.log(`⚠️ Fushata me ID ${metadata.campaign_id} nuk u gjet!`);
             }
             
-            // Përditëso totalin e donatorit
+            // update totalin e donatorit
             const currentTotal = parseFloat(donor.total_dhuruar || 0);
             const currentCount = donor.donation_count || 0;
             await donor.update({
@@ -170,7 +170,7 @@ const handleWebhook = async (req, res) => {
         }
     }
     
-    // Trajto pagesën e dështuar
+    // trajto pagesën e dështuar
     if (event.type === 'payment_intent.payment_failed') {
         const paymentIntent = event.data.object;
         console.log(`❌ Pagesa dështoi: ${paymentIntent.id}`);

@@ -4,29 +4,29 @@ const { body, validationResult } = require('express-validator');
 // VALIDIMI PËR KATEGORITË
 // ============================================
 const validateCategory = [
-    // Validimi i emrit
+    // validimi i emrit
     body('emertimi')
         .notEmpty().withMessage('Emri i kategorisë është i detyrueshëm')
         .isLength({ min: 2, max: 100 }).withMessage('Emri duhet të ketë 2-100 karaktere')
         .trim(),
     
-    // Validimi i përshkrimit (opsional)
+    // validimi i përshkrimit
     body('pershkrimi')
         .optional()
         .isLength({ max: 500 }).withMessage('Përshkrimi nuk mund të kalojë 500 karaktere')
         .trim(),
     
-    // Validimi i ikonës
+    // validimi i ikonës
     body('ikona')
         .optional()
         .isLength({ max: 10 }).withMessage('Ikona nuk mund të kalojë 10 karaktere'),
     
-    // Validimi i ngjyrës (duhet të jetë hex color)
+    // validimi i ngjyrës (DUHET TE JETE HEX COLOR)
     body('ngjyra')
         .optional()
         .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/).withMessage('Ngjyra duhet të jetë në format hex (#RRGGBB)'),
     
-    // Nëse ka gabime, kthejini
+    // nese ka gabime, kthejini
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

@@ -10,12 +10,13 @@ Sistemi ofron CRUD të plota për fushatat, kategoritë, donatorët, donacionet,
 
 | Emri | Roli | Përgjegjësitë |
 
-| Erion Bajraktari (EB) | Backend & Frontend | Stripe integrimi, Dashboard, Donacionet, Expenses, Beneficiaries, Updates, Autentikimi |
-| Ylli Hashani (YH) | Backend & Frontend | Campaigns CRUD, Donors CRUD, Volunteers, CampaignVolunteers, Reports |
+| Erion Bajraktari (EB) | Stripe integrimi (pagesa online + webhook), Dashboard (statistikat, grafikët), Donacionet (CRUD), Shpenzimet (Expenses), Përfituesit (Beneficiaries), Përditësimet e fushatave (Updates), Autentikimi (JWT, role, refresh token), CampaignCategories (CRUD)
+| Ylli Hashani (YH) | Fushata (Campaigns – CRUD + admin/user view), Donatorët (Donors – CRUD + admin/user view), Vullnetarët (Volunteers – CRUD + admin/user view), Caktimi i vullnetarëve në fushata (CampaignVolunteers – admin assignment), Raportet (Reports – backend API + frontend page)
 
 ## 🛠️ Teknologjitë e Përdorura
 
 ### Backend
+
 - **Node.js** - Runtime environment
 - **Express.js** - Web framework
 - **MySQL** - Database
@@ -26,6 +27,7 @@ Sistemi ofron CRUD të plota për fushatat, kategoritë, donatorët, donacionet,
 - **express-validator** - Validimi i të dhënave
 
 ### Frontend
+
 - **React.js** - Library për UI
 - **React Router** - Navigimi
 - **Axios** - HTTP requests
@@ -34,11 +36,13 @@ Sistemi ofron CRUD të plota për fushatat, kategoritë, donatorët, donacionet,
 - **React Hot Toast** - Notifikimet
 
 ### Mjete të Tjera
+
 - **Git & GitHub** - Version control
 - **VS Code** - Editor
 - **Postman** - API testing
 
 ## 📁 Struktura e Projektit
+
 ├── backend/
 │ ├── config/ # Database configuration
 │ ├── controllers/ # Logic per çdo entitet
@@ -63,15 +67,16 @@ text
 
 ## 🔐 Roli i Përdoruesve
 
-| Roli | Përshkrimi | Qasja |
-|------|------------|-------|
-| **Admin** | Administrator i sistemit | Qasje e plotë (CRUD për të gjitha entitetet) |
-| **Manager** | Menaxher | Qasje e plotë (pa fshirje të disa entiteteve) |
-| **User** | Përdorues normal | Mund të shohë fushatat, të bëjë donacione dhe të shohë donacionet e veta |
+| Roli        | Përshkrimi               | Qasja                                                                    |
+| ----------- | ------------------------ | ------------------------------------------------------------------------ |
+| **Admin**   | Administrator i sistemit | Qasje e plotë (CRUD për të gjitha entitetet)                             |
+| **Manager** | Menaxher                 | Qasje e plotë (pa fshirje të disa entiteteve)                            |
+| **User**    | Përdorues normal         | Mund të shohë fushatat, të bëjë donacione dhe të shohë donacionet e veta |
 
 ## 📊 Funksionalitetet Kryesore
 
 ### Për Admin/Manager
+
 - ✅ CRUD për fushatat
 - ✅ CRUD për kategoritë e fushatave
 - ✅ CRUD për donatorët
@@ -83,6 +88,7 @@ text
 - ✅ Gjenerimi i raporteve
 
 ### Për Përdoruesit Normal
+
 - ✅ Regjistrim dhe kyçje
 - ✅ Shikimi i fushatave aktive
 - ✅ Donacione online me Stripe
@@ -101,6 +107,7 @@ text
 ## 🚀 Instalimi dhe Ekzekutimi
 
 ### Kërkesat
+
 - Node.js (v18+)
 - MySQL (v8+)
 - Stripe account (për pagesa)
@@ -108,6 +115,7 @@ text
 ### Hapat
 
 1. **Klonimi i repozitorit**
+
 ```bash
 git clone https://github.com/illy-ylli/Sistem-per-Menaxhimin-e-Donacioneve.git
 cd Sistem-per-Menaxhimin-e-Donacioneve
@@ -175,3 +183,4 @@ Ky projekt realizon një sistem të plotë për menaxhimin e donacioneve duke p�
 Data e përfundimit: Qershor 2026
 Institucioni: UBT - Universiteti i Biznesit dhe Teknologjis
 Lënda: LAB1
+```

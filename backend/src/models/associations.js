@@ -38,7 +38,7 @@ Donor.hasMany(Donation, { foreignKey: 'donor_id', as: 'donor_donations', onDelet
 Expense.belongsTo(Campaign, { foreignKey: 'campaign_id', as: 'expense_campaign', onDelete: 'CASCADE' });
 Campaign.hasMany(Expense, { foreignKey: 'campaign_id', as: 'expenses', onDelete: 'CASCADE' });
 
-// CAMPAIGN & VOLUNTEER (through junction table)
+// CAMPAIGN & VOLUNTEER (ME JUNCTION TABLE)
 Campaign.belongsToMany(Volunteer, { through: CampaignVolunteer, foreignKey: 'campaign_id', otherKey: 'volunteer_id' });
 Volunteer.belongsToMany(Campaign, { through: CampaignVolunteer, foreignKey: 'volunteer_id', otherKey: 'campaign_id' });
 

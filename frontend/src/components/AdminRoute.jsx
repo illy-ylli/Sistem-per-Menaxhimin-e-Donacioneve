@@ -11,11 +11,11 @@ const AdminRoute = ({ children }) => {
     
     try {
         const decoded = jwtDecode(token);
-        // Vetëm admin dhe manager mund të hyjnë
+        // vetem admin dhe manager mund te hyjne
         if (decoded.role === 'admin' || decoded.role === 'manager') {
             return children;
         }
-        // Përdoruesit normal ridrejtohen në dashboard
+        // perdoruesit normal ridrejtohen ne dashboard
         return <Navigate to="/dashboard" replace />;
     } catch (error) {
         console.error('AdminRoute error:', error);

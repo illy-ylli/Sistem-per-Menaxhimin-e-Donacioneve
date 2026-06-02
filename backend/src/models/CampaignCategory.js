@@ -2,37 +2,36 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
 //perfaqeson tabellen campaign_categories ne databaze
-// Perdoret per te kategorizuar fushatat ( "Arsim", "Shendetesia", "Femije")
 const CampaignCategory = sequelize.define('CampaignCategory', {
     id: {
-        type: DataTypes.INTEGER,        // Numer i plote
-        primaryKey: true,               // Ky eshte celesi primar
-        autoIncrement: true             // Rritet automatikisht (1,2,3...)
+        type: DataTypes.INTEGER,       
+        primaryKey: true,               // PRIMARY KEY 
+        autoIncrement: true            
     },
     emertimi: {
-        type: DataTypes.STRING(100),    // Varg teksti deri ne 100 karaktere
-        allowNull: false,               // Nuk mund te jete bosh
-        unique: true,                   // Nuk mund te kete dy kategori me te njejtin emer
+        type: DataTypes.STRING(100),    
+        allowNull: false,              
+        unique: true,                   
         comment: 'Emri i kategorise p.sh., "Arsim", "Shendetesi"'
     },
     pershkrimi: {
-        type: DataTypes.TEXT,           // Tekst i gjate (pa limit karakteresh)
-        allowNull: true,                // Mund te jete bosh (jo i detyrueshem)
+        type: DataTypes.TEXT,           
+        allowNull: true,                
         comment: 'Pershkrimi i detajuar i kategorise'
     },
     ikona: {
-        type: DataTypes.STRING(50),     // Emoji per kategorine
-        defaultValue: '🎯',             // Neqoftese nuk jepet  vendos '🎯'
+        type: DataTypes.STRING(50),     
+        defaultValue: '🎯',             // nese sjep user kurgjo osht qikjo baz
         comment: 'Emoji per paraqitje vizuale (🎓,🏥,👶)'
     },
     ngjyra: {
-        type: DataTypes.STRING(20),     // Kod ngjyre si '#26a69a' ose 'red'
-        defaultValue: '#26a69a',        // Ngjyra e paracaktuar (teal/jeshile)
+        type: DataTypes.STRING(20),     
+        defaultValue: '#26a69a',      // nese user nuk jep ngjyre osht kjo baz 
         comment: 'Ngjyra per kategorine ne UI'
     }
 }, {
-    tableName: 'campaign_categories',   // Emri i tabeles ne MySQL
-    timestamps: true                    // Shton createdAt dhe updatedAt automatikisht
+    tableName: 'campaign_categories',  
+    timestamps: true                    
 });
 
 module.exports = CampaignCategory;

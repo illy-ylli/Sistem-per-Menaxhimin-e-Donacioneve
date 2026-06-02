@@ -55,12 +55,12 @@ const AdminCampaigns = () => {
             toast.error('Ju lutem plotësoni të gjitha fushat e detyrueshme');
             return;
         }
-        // Check backend validation: description must be at least 10 characters
+        // Check backend validation:     description must be at least 10 characters
         if (formData.pershkrimi.length < 10) {
             toast.error('Përshkrimi duhet të ketë të paktën 10 karaktere');
             return;
         }
-        // Prepare data: convert empty category_id to null
+        // convert empty category_id to null
         const dataToSend = {
             ...formData,
             category_id: formData.category_id === '' ? null : parseInt(formData.category_id, 10)

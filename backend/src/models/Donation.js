@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
-// Ky model perfaqeson tabellen "donations" ne databaze
+// ky model perfaqeson tabellen "donations" ne databaze
 const Donation = sequelize.define('Donation', {
     id: {
         type: DataTypes.INTEGER,

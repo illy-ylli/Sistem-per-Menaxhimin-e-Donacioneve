@@ -46,7 +46,7 @@ const Dashboard = () => {
         <>
             <Header />
             <div style={{ paddingTop: '80px' }}>
-                {/* Banner Mirë se vini */}
+                {}
                 <section className="banner-area relative" id="dashboard">
                     <div className="overlay overlay-bg"></div>
                     <div className="container">
@@ -64,7 +64,7 @@ const Dashboard = () => {
                     </div>
                 </section>
                 
-                {/* Statistikat Kryesore */}
+                {}
                 <section className="callto-area relative">
                     <div className="container">
                         <div className="row d-flex callto-wrap justify-content-between pt-40 pb-40">
@@ -119,7 +119,7 @@ const Dashboard = () => {
                     </div>
                 </section>
                 
-                {/* Donacionet e Fundit */}
+                {}
                 <section className="project-area section-gap">
                     <div className="container">
                         <div className="row d-flex justify-content-center">

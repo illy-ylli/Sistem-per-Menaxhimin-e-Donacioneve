@@ -8,7 +8,7 @@ const {
     getCampaignSummary
 } = require('../controllers/reportController');
 
-// All report endpoints are protected and only for admin/manager (optional)
+// All report endpoints are protected and only for admin/manager role VEQ
 router.get('/donations-per-campaign', protect, authorize('admin', 'manager'), getDonationsPerCampaign);
 router.get('/top-donors', protect, authorize('admin', 'manager'), getTopDonors);
 router.get('/expenses-per-campaign', protect, authorize('admin', 'manager'), getExpensesPerCampaign);
